@@ -1,6 +1,6 @@
-; r13‚Í•¶š—ñƒ‹[ƒv‚ÌƒJƒEƒ“ƒ^BƒtƒHƒ“ƒg‚É•¶š‚ª‚ ‚Á‚Ä‚à‚È‚­‚Ä‚àŠÖŒW‚È‚¢
-; r10‚Í•¶š—ñ‚Ìlenght
-; edxi[rbp+1D0h+var_138]j‚Í•¶šƒ|ƒWƒVƒ‡ƒ“ƒJƒEƒ“ƒ^
+; r13ï¿½Í•ï¿½ï¿½ï¿½ï¿½ñƒ‹[ï¿½vï¿½ÌƒJï¿½Eï¿½ï¿½ï¿½^ï¿½Bï¿½tï¿½Hï¿½ï¿½ï¿½gï¿½É•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½È‚ï¿½ï¿½Ä‚ï¿½ï¿½ÖŒWï¿½È‚ï¿½
+; r10ï¿½Í•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lenght
+; edxï¿½i[rbp+1D0h+var_138]ï¿½jï¿½Í•ï¿½ï¿½ï¿½ï¿½|ï¿½Wï¿½Vï¿½ï¿½ï¿½ï¿½ï¿½Jï¿½Eï¿½ï¿½ï¿½^
 
 EXTERN	mapJustifyProc1ReturnAddress1	:	QWORD
 EXTERN	mapJustifyProc1ReturnAddress2	:	QWORD
@@ -12,15 +12,6 @@ EXTERN	mapJustifyProc4ReturnAddress	:	QWORD
 	mapJustifyProc1TmpFlag	DD	0
 	debug	DQ	0
 
-ESCAPE_SEQ_1	=	10h
-ESCAPE_SEQ_2	=	11h
-ESCAPE_SEQ_3	=	12h
-ESCAPE_SEQ_4	=	13h
-LOW_SHIFT		=	0Eh
-HIGH_SHIFT		=	9h
-SHIFT_2			=	LOW_SHIFT
-SHIFT_3			=	900h
-SHIFT_4			=	8F2h
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
 MAP_LIMIT		=	2Dh-3
@@ -31,41 +22,34 @@ mapJustifyProc1 PROC
 
 	mov		debug, rax;
 
-	cmp		byte ptr [rax + r13], ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		byte ptr [rax + r13], ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		byte ptr [rax + r13], ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		byte ptr [rax + r13], ESCAPE_SEQ_4;
-	jz		JMP_D;
-	mov		mapJustifyProc1TmpFlag, 0h;
-	movzx	esi, byte ptr [rax + r13];
-	mov     rdi, qword ptr [rcx + rsi * 8];
-	test	rdi, rdi;
-	jz		JMP_I;
-	jmp		mapJustifyProc1ReturnAddress1;
+	cmp     byte ptr[rax + r13], 7Eh;
+	ja      JMP_A;
+	movzx   esi, byte ptr[rax + r13];
+	jmp 	JMP_K;
 
 JMP_A:
-	movzx	esi, word ptr [rax + r13 + 1];
-	jmp		JMP_F;
+	push	rdx;
+	movzx   dx, byte ptr [rax + r13];
+	and     dx, 1Fh;
+	cmp     byte ptr [rax + r13], 0E0h;
+	jb      JMP_B;
+	and     dx, 0Fh;
+
+	inc		rax;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + r13];
 
 JMP_B:
-	movzx	esi, word ptr [rax + r13 + 1];
-	sub		esi, SHIFT_2;
-	jmp		JMP_F;
+	inc		rax;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + r13]
 
-JMP_C:
-	movzx	esi, word ptr [rax + r13 + 1];
-	add		esi, SHIFT_3;
-	jmp		JMP_F;
-
-JMP_D:
-	movzx	esi, word ptr [rax + r13 + 1];
-	add		esi, SHIFT_4;
-
-JMP_F:
-	; ‚±‚±‚Ìdec‚ª•¶š‚Ì‚Â‚Ü‚è‚ğ§Œä‚µ‚Ä‚¢‚é
+	movzx	esi, dx;	
+	pop 	rdx;
+	mov		rax, debug;
+	; ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½decï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Â‚Ü‚ï¿½ğ§Œä‚µï¿½Ä‚ï¿½ï¿½ï¿½
 	dec		r10;
 	cmp		r13,MAP_LIMIT;
 	ja		JMP_H;
@@ -79,8 +63,16 @@ JMP_H:
 JMP_G:
 	mov		mapJustifyProc1TmpFlag, 1h;
 	mov     rdi, qword ptr [rcx + rsi * 8];
-	mov		sil, ESCAPE_SEQ_1; // ‰º‚Ì•û‚Åsil‚ğ”äŠr‚µ‚Ä'‚â.‚Æ”äŠr‚µ‚Ä‚¢‚é‚Ì‚Å‚¢‚é‚Ì‚Å“K“–‚É–„‚ß‚é
+	mov		sil, 10h; // ï¿½ï¿½ï¿½Ì•ï¿½ï¿½ï¿½silï¿½ï¿½ï¿½rï¿½ï¿½ï¿½ï¿½'ï¿½ï¿½.ï¿½Æ”ï¿½rï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚Å‚ï¿½ï¿½ï¿½Ì‚Å“Kï¿½ï¿½ï¿½É–ï¿½ï¿½ß‚ï¿½
 
+	test	rdi, rdi;
+	jz		JMP_I;
+	push	mapJustifyProc1ReturnAddress1;
+	ret;
+
+JMP_K:
+	mov		mapJustifyProc1TmpFlag, 0h;
+	mov     rdi, qword ptr [rcx + rsi * 8];
 	test	rdi, rdi;
 	jz		JMP_I;
 	push	mapJustifyProc1ReturnAddress1;
@@ -97,7 +89,7 @@ mapJustifyProc2 PROC
 	cmp		mapJustifyProc1TmpFlag, 1h;
 	jnz		JMP_A;
 
-	; 3byte = 1•¶š‚©‚Ç‚¤‚©
+	; 3byte = 1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½
 	cmp		r10, 2; 
 	ja		JMP_A;
 	inc		r10;
@@ -107,15 +99,15 @@ mapJustifyProc2 PROC
 JMP_A:
 	movd    xmm6, edx;
 
-	; ƒGƒXƒP[ƒv•¶š
+	; ï¿½Gï¿½Xï¿½Pï¿½[ï¿½vï¿½ï¿½ï¿½ï¿½
 	cmp		mapJustifyProc1TmpFlag, 1h;
 	jz		JMP_B;
 
-	lea     eax, [r10 - 1]; ; -1‚µ‚Ä‚¢‚é
+	lea     eax, [r10 - 1]; ; -1ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
 	jmp		JMP_C;
 
 JMP_B:
-	lea     eax, [r10 - 2]; ; -2‚µ‚Ä‚¢‚é
+	lea     eax, [r10 - 2]; ; -2ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
 
 JMP_C:
 	movd    xmm0, eax;

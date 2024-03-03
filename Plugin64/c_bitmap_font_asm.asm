@@ -1,15 +1,6 @@
 EXTERN	cBitmapFontProc1ReturnAddress	:	QWORD
 EXTERN	cBitmapFontProc2ReturnAddress	:	QWORD
 
-ESCAPE_SEQ_1	=	10h
-ESCAPE_SEQ_2	=	11h
-ESCAPE_SEQ_3	=	12h
-ESCAPE_SEQ_4	=	13h
-LOW_SHIFT		=	0Eh
-HIGH_SHIFT		=	9h
-SHIFT_2			=	LOW_SHIFT
-SHIFT_3			=	900h
-SHIFT_4			=	8F2h
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
 
@@ -17,44 +8,38 @@ NOT_DEF			=	2026h
 .CODE
 cBitmapFontProc1 PROC
 	;movzx   eax, byte ptr [rdi+rax]
-	cmp		byte ptr[rdi + rax], ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		byte ptr[rdi + rax], ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		byte ptr[rdi + rax], ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		byte ptr[rdi + rax], ESCAPE_SEQ_4;
-	jz		JMP_D;
-
-	movzx	eax, byte ptr [rdi + rax];
-	jmp		JMP_H;
+	cmp     byte ptr[rax + rdi], 7Eh;
+	ja      JMP_A;
+	movzx   eax, byte ptr[rax + rdi];
+	jmp 	JMP_H;
 
 JMP_A:
-	movzx	eax, word ptr[rdi + rax + 1];
-	jmp		JMP_E;
+	push	rdx;
+	movzx   dx, byte ptr [rax + rdi];
+	and     dx, 1Fh;
+	cmp     byte ptr [rax + rdi], 0E0h;
+	jb      JMP_B;
+	and     dx, 0Fh;
+
+	inc		rdi;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + rdi];
 
 JMP_B:
-	movzx	eax, word ptr[rdi + rax + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_E;
+	inc		rdi;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + rdi]
 
-JMP_C:
-	movzx	eax, word ptr[rdi + rax + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_E;
+	movzx	eax, dx; 	
+	pop 	rdx;
+	cmp		ax, NO_FONT;
 
-JMP_D:
-	movzx	eax, word ptr[rdi + rax + 1];
-	add		eax, SHIFT_4;
-
-JMP_E:
-	movzx	eax, ax;
-	cmp		eax, NO_FONT;
 	ja		JMP_G;
-	mov		eax, NOT_DEF;
+	mov		ax, NOT_DEF;
 
 JMP_G:
-	add		edi, 2;
 	xorps   xmm6, xmm6
 
 JMP_H:
@@ -71,44 +56,36 @@ cBitmapFontProc2 PROC
 	mov     r13d, edi;
 	movss   xmm6, dword ptr [r12+848h];
 
-	cmp		byte ptr[rax + r13], ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		byte ptr[rax + r13], ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		byte ptr[rax + r13], ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		byte ptr[rax + r13], ESCAPE_SEQ_4;
-	jz		JMP_D;
-
-	movzx	eax, byte ptr [rax + r13];
-	jmp		JMP_H;
+	cmp     byte ptr[rax + r13], 7Eh;
+	ja      JMP_A;
+	movzx   eax, byte ptr[rax + r13];
+	jmp 	JMP_H;
 
 JMP_A:
-	movzx	eax, word ptr[rax + r13 + 1];
-	jmp		JMP_E;
+	push	rdx;
+	movzx   dx, byte ptr [rax + r13];
+	and     dx, 1Fh;
+	cmp     byte ptr [rax + r13], 0E0h;
+	jb      JMP_B;
+	and     dx, 0Fh;
+
+	inc		rdi;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + rdi];
 
 JMP_B:
-	movzx	eax, word ptr[rax + r13 + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_E;
+	inc		rdi;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + rdi]
 
-JMP_C:
-	movzx	eax, word ptr[rax + r13 + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_E;
+	movzx	eax, dx; 	
+	pop 	rdx;
+	cmp		ax, NO_FONT;
 
-JMP_D:
-	movzx	eax, word ptr[rax + r13 + 1];
-	add		eax, SHIFT_4;
-
-JMP_E:
-	movzx	eax, ax;
-	cmp		eax, NO_FONT;
-	ja		JMP_G;
-	mov		eax, NOT_DEF;
-
-JMP_G:
-	add		edi, 2;
+	ja		JMP_H;
+	mov		ax, NOT_DEF;
 
 JMP_H:
 	mov     r12, [r12+rax*8];

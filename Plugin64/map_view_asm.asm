@@ -4,15 +4,6 @@ EXTERN	mapViewProc3ReturnAddress	:	QWORD
 EXTERN	mapViewProc3CallAddress		:	QWORD
 EXTERN	mapViewProc3CallAddress		:	QWORD
 
-ESCAPE_SEQ_1	=	10h
-ESCAPE_SEQ_2	=	11h
-ESCAPE_SEQ_3	=	12h
-ESCAPE_SEQ_4	=	13h
-LOW_SHIFT		=	0Eh
-HIGH_SHIFT		=	9h
-SHIFT_2			=	LOW_SHIFT
-SHIFT_3			=	900h
-SHIFT_4			=	8F2h
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
 
@@ -22,46 +13,38 @@ NOT_DEF			=	2026h
 
 .CODE
 mapViewProc1 PROC
-	cmp		byte ptr [rax+r8], ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		byte ptr [rax+r8], ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		byte ptr [rax+r8], ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		byte ptr [rax+r8], ESCAPE_SEQ_4;
-	jz		JMP_D;
-	jmp		JMP_E;
+	cmp     byte ptr[rax + r8], 7Eh;
+	ja      JMP_A;
+	movzx   eax, byte ptr[rax + r8];
+	jmp 	JMP_G;
 
 JMP_A:
-	movzx	eax, word ptr [rax + r8 + 1];
-	jmp		JMP_F;
+	push	rdx;
+	movzx   dx, byte ptr [rax + r8];
+	and     dx, 1Fh;
+	cmp     byte ptr [rax + r8], 0E0h;
+	jb      JMP_B;
+	and     dx, 0Fh;
+
+	inc		ebx;
+	inc		r8d;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + r8];
 
 JMP_B:
-	movzx	eax, word ptr [rax + r8 + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_F;
+	inc		ebx
+	inc		r8d;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + r8]
 
-JMP_C:
-	movzx	eax, word ptr [rax + r8 + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_F;
-
-JMP_D:
-	movzx	eax, word ptr [rax + r8 + 1];
-	add		eax, SHIFT_4;
-
-JMP_F:
-	add		ebx, 2;
-	add		r8d, 2;
-	movzx	eax, ax;
+	movzx	eax, dx; 	
+	pop 	rdx;
 	cmp		eax, NO_FONT;
 	ja		JMP_G;
 	mov		eax, NOT_DEF;
 	jmp		JMP_G;
-
-JMP_E:
-	movzx	eax, byte ptr [rax + r8];
-	mov     r11, qword ptr [ rdi + rax * 8];
 
 JMP_G:
 	mov     r11, qword ptr [ rdi + rax * 8];
@@ -88,52 +71,6 @@ mapViewProc1 ENDP
 ;-------------------------------------------;
 
 mapViewProc2 PROC
-	lea     r9, [r12 + 100h];
-
-	cmp		byte ptr[rax + r15], ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		byte ptr[rax + r15], ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		byte ptr[rax + r15], ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		byte ptr[rax + r15], ESCAPE_SEQ_4;
-	jz		JMP_D;
-
-	movzx	eax, byte ptr[rax + r15];
-	jmp		JMP_E;
-
-JMP_A:
-	movzx	eax, word ptr[rax + r15 + 1];
-	jmp		JMP_F;
-
-JMP_B:
-	movzx	eax, word ptr[rax + r15 + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_F;
-
-JMP_C:
-	movzx	eax, word ptr[rax + r15 + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_F;
-
-JMP_D:
-	movzx	eax, word ptr[rax + r15 + 1];
-	add		eax, SHIFT_4;
-
-JMP_F:
-	add		esi, 2;
-	add		r15, 2;
-
-	movzx	eax, ax;
-	cmp		eax, NO_FONT;
-	ja		JMP_E;
-
-JMP_G:
-	mov		eax, NOT_DEF;
-
-JMP_E:
-	mov     r12, qword ptr [r9 + rax * 8];
-
 	push	mapViewProc2ReturnAddress;
 	ret;
 mapViewProc2 ENDP
@@ -143,45 +80,36 @@ mapViewProc2 ENDP
 mapViewProc2V130 PROC
 	lea     r9, [r12 + 120h];
 
-	cmp		byte ptr[rax + r15], ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		byte ptr[rax + r15], ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		byte ptr[rax + r15], ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		byte ptr[rax + r15], ESCAPE_SEQ_4;
-	jz		JMP_D;
-
-	movzx	eax, byte ptr[rax + r15];
-	jmp		JMP_E;
+	cmp     byte ptr[rax + r15], 7Eh;
+	ja      JMP_A;
+	movzx   eax, byte ptr[rax + r15];
+	jmp 	JMP_E;
 
 JMP_A:
-	movzx	eax, word ptr[rax + r15 + 1];
-	jmp		JMP_F;
+	push	rdx;
+	movzx   dx, byte ptr [rax + r15];
+	and     dx, 1Fh;
+	cmp     byte ptr [rax + r15], 0E0h;
+	jb      JMP_B;
+	and     dx, 0Fh;
+
+	inc		esi;
+	inc		r15;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + r15];
 
 JMP_B:
-	movzx	eax, word ptr[rax + r15 + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_F;
+	inc		esi;
+	inc		r15;
+	rcl     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [rax + r15]
 
-JMP_C:
-	movzx	eax, word ptr[rax + r15 + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_F;
-
-JMP_D:
-	movzx	eax, word ptr[rax + r15 + 1];
-	add		eax, SHIFT_4;
-
-JMP_F:
-	add		esi, 2;
-	add		r15, 2;
-
-	movzx	eax, ax;
+	movzx	eax, dx; 	
+	pop 	rdx;
 	cmp		eax, NO_FONT;
 	ja		JMP_E;
-
-JMP_G:
 	mov		eax, NOT_DEF;
 
 JMP_E:
@@ -196,14 +124,8 @@ mapViewProc2V130 ENDP
 mapViewProc3 PROC
     mov		qword ptr[rsp + 488h - 448h],0;
 
-	cmp		byte ptr [rax + r15], ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		byte ptr [rax + r15], ESCAPE_SEQ_2;
-	jz		JMP_A;
-	cmp		byte ptr [rax + r15], ESCAPE_SEQ_3;
-	jz		JMP_A;
-	cmp		byte ptr [rax + r15], ESCAPE_SEQ_4;
-	jz		JMP_A;
+	cmp		byte ptr [rax + r15], 7Eh;
+	ja		JMP_A;
 
 	movzx	r8d, byte ptr[rax + r15];
 	mov     edx, 1;
