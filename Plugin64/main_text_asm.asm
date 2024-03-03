@@ -25,21 +25,26 @@ JMP_A:
 	movsxd  rdi, edi;
 	movzx   eax, byte ptr [rdi + rbx];
 	and     ax, 1Fh;
+	;强行转义 C2A7 or not?
 	cmp     byte ptr [rdi + rbx], 0E0h;
 	jb      JMP_B;
 	and     ax, 0Fh;
 
 	inc		rdi;
-	rcl     ax, 6;
+	rol     ax, 6;
 	xor     al, 80h;
 	xor     al, byte ptr [rdi + rbx];
 
 JMP_B:
 	inc		rdi;
-	rcl     ax, 6;
+	rol     ax, 6;
 	xor     al, 80h;
 	xor     al, byte ptr [rdi + rbx]
+	test	ah, ah;
+	jnz		JMP_C;
+	dec		rdi;
 
+JMP_C:
 	movzx 	eax, ax;
 	cmp		ax, NO_FONT;
 
@@ -70,7 +75,7 @@ mainTextProc2_v131 PROC
 	movsxd  rcx, r14d;
 	mov     r10, [rbp+750h-7D0h];
 
-	movzx	eax, byte ptr [rdx+r10];
+	movzx	eax, byte ptr [rdx + r10];
 	mov		r9, mainTextProc2BufferAddress;
 	mov     byte ptr [rcx+r9], al;
 
@@ -86,7 +91,7 @@ mainTextProc2_v131 PROC
 	and		edi, 0Fh
 
 	inc 	rdx;
-	rcl		edi, 6;
+	rol		edi, 6;
 	xor		edi, 80h;
 	movzx 	eax, byte ptr [rdx + r10];
 	xor		edi, eax;
@@ -96,7 +101,7 @@ mainTextProc2_v131 PROC
 
 JMP_B:
 	inc 	rdx;
-	rcl		edi, 6;
+	rol		edi, 6;
 	xor		edi, 80h;
 	movzx 	eax, byte ptr [rdx + r10];
 	xor		edi, eax;
@@ -106,7 +111,12 @@ JMP_B:
 
 	mov 	eax, edi;
 	mov		edi, edx;
-
+	test	ah, ah; C2A7 ; ;
+	jnz		JMP_A;
+	mov		byte ptr [rcx + r9 - 2], al;
+	dec		rdx;
+	dec		rcx;
+	dec		r14d;
 JMP_A:
 	mov		mainTextProc2TmpCharacter, eax;
 	

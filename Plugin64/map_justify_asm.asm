@@ -36,13 +36,13 @@ JMP_A:
 	and     dx, 0Fh;
 
 	inc		rax;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + r13];
 
 JMP_B:
 	inc		rax;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + r13]
 

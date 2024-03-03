@@ -22,13 +22,13 @@ JMP_A:
 	and     dx, 0Fh;
 
 	inc		rdi;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + rdi];
 
 JMP_B:
 	inc		rdi;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + rdi]
 
@@ -70,13 +70,13 @@ JMP_A:
 	and     dx, 0Fh;
 
 	inc		rdi;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + rdi];
 
 JMP_B:
 	inc		rdi;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + rdi]
 

@@ -28,14 +28,14 @@ JMP_A:
 
 	inc		ebx;
 	inc		r8d;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + r8];
 
 JMP_B:
 	inc		ebx
 	inc		r8d;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + r8]
 
@@ -95,14 +95,14 @@ JMP_A:
 
 	inc		esi;
 	inc		r15;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + r15];
 
 JMP_B:
 	inc		esi;
 	inc		r15;
-	rcl     dx, 6;
+	rol     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + r15]
 
