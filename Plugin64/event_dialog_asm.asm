@@ -19,7 +19,7 @@ eventDialogProc1 ENDP
 ;-------------------------------------------;
 
 eventDialogProc1V132 PROC
-	cmp     byte ptr[rax + rdx], 7Eh;
+	cmp     byte ptr[rax + rdx], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rdx];
 	mov		eventDialogProc1Flag, 0;

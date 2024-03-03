@@ -30,7 +30,7 @@ listFieldAdjustmentProc1_v1315 PROC
 	mov		rcx, qword ptr [rbp + 0D0h - 130h];
 	movss	xmm6, dword ptr [rcx + 848h];
 
-	cmp     byte ptr[r12 + rax], 7Eh;
+	cmp     byte ptr[r12 + rax], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[r12 + rax];
 	mov		listFieldAdjustmentProc1MultibyteFlag, 0;

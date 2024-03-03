@@ -22,7 +22,7 @@ mapJustifyProc1 PROC
 
 	mov		debug, rax;
 
-	cmp     byte ptr[rax + r13], 7Eh;
+	cmp     byte ptr[rax + r13], 0C4h;
 	ja      JMP_A;
 	movzx   esi, byte ptr[rax + r13];
 	jmp 	JMP_K;

@@ -8,7 +8,7 @@ NOT_DEF			=	2026h
 .CODE
 cBitmapFontProc1 PROC
 	;movzx   eax, byte ptr [rdi+rax]
-	cmp     byte ptr[rax + rdi], 7Eh;
+	cmp     byte ptr[rax + rdi], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rdi];
 	jmp 	JMP_H;
@@ -56,7 +56,7 @@ cBitmapFontProc2 PROC
 	mov     r13d, edi;
 	movss   xmm6, dword ptr [r12+848h];
 
-	cmp     byte ptr[rax + r13], 7Eh;
+	cmp     byte ptr[rax + r13], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + r13];
 	jmp 	JMP_H;

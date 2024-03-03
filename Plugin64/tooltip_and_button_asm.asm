@@ -32,7 +32,7 @@ tooltipAndButtonProc1 ENDP
 ;-------------------------------------------;
 
 tooltipAndButtonProc1V133 PROC
-	cmp		byte ptr [rax + rcx], 7Eh
+	cmp		byte ptr [rax + rcx], 0C4h
 	ja		JMP_A;
 	
 	movzx	r8d, byte ptr[rax + rcx];
@@ -76,7 +76,7 @@ tooltipAndButtonProc2 ENDP
 tooltipAndButtonProc2V133 PROC
 	mov		edx, ebx;
 
-	cmp     byte ptr[rax + rdx], 7Eh;
+	cmp     byte ptr[rax + rdx], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rdx];
 	jmp 	JMP_G;
@@ -127,7 +127,7 @@ tooltipAndButtonProc3 PROC
 	mov     ecx, ebx;
 	movss   xmm10, dword ptr [r15 + 848h];
 
-	cmp     byte ptr[rax + rcx], 7Eh;
+	cmp     byte ptr[rax + rcx], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rcx];
 	jmp 	JMP_G;
@@ -217,7 +217,7 @@ tooltipAndButtonProc5 ENDP
 tooltipAndButtonProc5V130 PROC
 	lea     rcx, qword ptr [r12 + 120h];
 
-	cmp     byte ptr[rbx + r14], 7Eh;
+	cmp     byte ptr[rbx + r14], 0C4h;
 	ja      JMP_A;
 	movzx   edx, byte ptr[rbx + r14];
 	jmp 	JMP_G;

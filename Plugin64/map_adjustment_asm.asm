@@ -147,7 +147,7 @@ mapAdjustmentProc4V130 PROC
 	cmp		r8, 10h;
 	cmovnb	rax, r9;
 
-	cmp     byte ptr[rax + rcx], 7Eh;
+	cmp     byte ptr[rax + rcx], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rcx];
 	jmp 	JMP_E;

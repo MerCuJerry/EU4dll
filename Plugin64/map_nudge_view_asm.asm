@@ -19,7 +19,7 @@ mapNudgeViewProc1V130 ENDP
 
 
 mapNudgeViewProc1V136 PROC
-	cmp     byte ptr[rax + rcx], 7Eh;
+	cmp     byte ptr[rax + rcx], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rcx];
 	jmp 	JMP_F;

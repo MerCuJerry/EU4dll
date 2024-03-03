@@ -16,7 +16,7 @@ NOT_DEF			=	2026h
 mainTextProc1 PROC
 	movsxd	rax, edi;
 
-	cmp     byte ptr[rax + rbx], 7Eh;
+	cmp     byte ptr[rax + rbx], 0C4h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rbx];
 	jmp 	JMP_E;
