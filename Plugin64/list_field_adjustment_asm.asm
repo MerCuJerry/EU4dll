@@ -3,15 +3,6 @@ EXTERN	listFieldAdjustmentProc2ReturnAddress	:	QWORD
 EXTERN	listFieldAdjustmentProc3ReturnAddress	:	QWORD
 EXTERN	listFieldAdjustmentProc2V1315ReturnAddress : QWORD
 
-ESCAPE_SEQ_1	=	10h
-ESCAPE_SEQ_2	=	11h
-ESCAPE_SEQ_3	=	12h
-ESCAPE_SEQ_4	=	13h
-LOW_SHIFT		=	0Eh
-HIGH_SHIFT		=	9h
-SHIFT_2			=	LOW_SHIFT
-SHIFT_3			=	900h
-SHIFT_4			=	8F2h
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
 
@@ -22,54 +13,6 @@ NOT_DEF			=	2026h
 
 .CODE
 listFieldAdjustmentProc1 PROC
-	mov		r8, qword ptr [rbp + 0B0h - 118h];
-	movss	xmm6, dword ptr [r8 + 848h];
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_1;
-	jz		JMP_A;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_2;
-	jz		JMP_B;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_3;
-	jz		JMP_C;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_4;
-	jz		JMP_D;
-	
-	movzx	eax, byte ptr[r12 + rax];
-	jmp		JMP_G;
-
-JMP_A:
-	movzx	eax, word ptr[r12 + rax + 1];
-	jmp		JMP_E;
-
-JMP_B:
-	movzx	eax, word ptr[r12 + rax + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_E;
-
-JMP_C:
-	movzx	eax, word ptr[r12 + rax + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_E;
-
-JMP_D:
-	movzx	eax, word ptr[r12 + rax + 1];
-	add		eax, SHIFT_4;
-	jmp		JMP_E;
-
-JMP_E:
-	mov		listFieldAdjustmentProc1MultibyteFlag, 1h;
-	movzx	eax, ax;
-	cmp		eax, NO_FONT;
-	ja		JMP_G;
-	mov		eax, NOT_DEF;
-
-JMP_G:
-	mov     r15, qword ptr [r8 + rax * 8];
-	test    r15, r15;
-
 	push	listFieldAdjustmentProc1ReturnAddress;
 	ret;
 listFieldAdjustmentProc1 ENDP
@@ -77,54 +20,6 @@ listFieldAdjustmentProc1 ENDP
 ;-------------------------------------------;
 
 listFieldAdjustmentProc1_v131 PROC
-	mov		rcx, qword ptr [rbp + 0C0h - 128h];
-	movss	xmm6, dword ptr [rcx + 848h];
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_1;
-	jz		JMP_A;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_2;
-	jz		JMP_B;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_3;
-	jz		JMP_C;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_4;
-	jz		JMP_D;
-	
-	movzx	eax, byte ptr[r12 + rax];
-	jmp		JMP_G;
-
-JMP_A:
-	movzx	eax, word ptr[r12 + rax + 1];
-	jmp		JMP_E;
-
-JMP_B:
-	movzx	eax, word ptr[r12 + rax + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_E;
-
-JMP_C:
-	movzx	eax, word ptr[r12 + rax + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_E;
-
-JMP_D:
-	movzx	eax, word ptr[r12 + rax + 1];
-	add		eax, SHIFT_4;
-	jmp		JMP_E;
-
-JMP_E:
-	mov		listFieldAdjustmentProc1MultibyteFlag, 1h;
-	movzx	eax, ax;
-	cmp		eax, NO_FONT;
-	ja		JMP_G;
-	mov		eax, NOT_DEF;
-
-JMP_G:
-	mov     r15, qword ptr [rcx + rax * 8];
-	test    r15, r15;
-
 	push	listFieldAdjustmentProc1ReturnAddress;
 	ret;
 listFieldAdjustmentProc1_v131 ENDP
@@ -135,43 +30,34 @@ listFieldAdjustmentProc1_v1315 PROC
 	mov		rcx, qword ptr [rbp + 0D0h - 130h];
 	movss	xmm6, dword ptr [rcx + 848h];
 
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_1;
-	jz		JMP_A;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_2;
-	jz		JMP_B;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_3;
-	jz		JMP_C;
-
-	cmp		byte ptr[r12 + rax], ESCAPE_SEQ_4;
-	jz		JMP_D;
-	
-	movzx	eax, byte ptr[r12 + rax];
-	jmp		JMP_G;
+	cmp     byte ptr[r12 + rax], 0C4h;
+	ja      JMP_A;
+	movzx   eax, byte ptr[r12 + rax];
+	mov		listFieldAdjustmentProc1MultibyteFlag, 0;
+	jmp 	JMP_G;
 
 JMP_A:
-	movzx	eax, word ptr[r12 + rax + 1];
-	jmp		JMP_E;
+	push	rdx;
+	movzx   dx, byte ptr [r12 + rax];
+	and     dx, 1Fh;
+	cmp     byte ptr [r12 + rax], 0E0h;
+	jb      JMP_B;
+	and     dx, 0Fh;
+
+	inc		rax;
+	rol     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [r12 + rax];
 
 JMP_B:
-	movzx	eax, word ptr[r12 + rax + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_E;
+	inc		rax;
+	rol     dx, 6;
+	xor     dl, 80h;
+	xor     dl, byte ptr [r12 + rax]
 
-JMP_C:
-	movzx	eax, word ptr[r12 + rax + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_E;
-
-JMP_D:
-	movzx	eax, word ptr[r12 + rax + 1];
-	add		eax, SHIFT_4;
-	jmp		JMP_E;
-
-JMP_E:
-	mov		listFieldAdjustmentProc1MultibyteFlag, 1h;
-	movzx	eax, ax;
+	movzx	eax, dx;
+	pop 	rdx;
+	mov		listFieldAdjustmentProc1MultibyteFlag, 1;
 	cmp		eax, NO_FONT;
 	ja		JMP_G;
 	mov		eax, NOT_DEF;

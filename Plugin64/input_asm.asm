@@ -7,11 +7,6 @@ ESCAPE_SEQ_1	=	10h
 ESCAPE_SEQ_2	=	11h
 ESCAPE_SEQ_3	=	12h
 ESCAPE_SEQ_4	=	13h
-LOW_SHIFT		=	0Eh
-HIGH_SHIFT		=	9h
-SHIFT_2			=	LOW_SHIFT
-SHIFT_3			=	900h
-SHIFT_4			=	8F2h
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
 
@@ -23,15 +18,15 @@ NOT_DEF			=	2026h
 
 .CODE
 inputProc1 PROC
-	; eax‚É‚ÍIME‚©‚çutf8‚Ì•¶Žš‚ª“n‚³‚ê‚Ä‚­‚é
+	; eaxï¿½É‚ï¿½IMEï¿½ï¿½ï¿½ï¿½utf8ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
 	mov		eax, dword ptr [rbp + 120h - 198h + 0Ch];
-	; ah‚ª0‚Å‚ ‚ê‚Îa-z‚È‚Ç‚Ì1byte‚ÅŽû‚Ü‚é•¶Žš‚È‚Ì‚ÅA•ÏŠ·ˆ—‚Í•K—v‚È‚¢
+	; ahï¿½ï¿½0ï¿½Å‚ï¿½ï¿½ï¿½ï¿½a-zï¿½È‚Ç‚ï¿½1byteï¿½ÅŽï¿½ï¿½Ü‚é•¶ï¿½ï¿½ï¿½È‚Ì‚ÅAï¿½ÏŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í•Kï¿½vï¿½È‚ï¿½
 	cmp		ah, 0;
 	jnz		JMP_A;
 	xor		bl, bl;
 
-	; JMP_X,Y‚É‚Â‚¢‚Ä‚Ìà–¾BMakeJMP‚ÅƒR[ƒh‚ª”j‰ó‚³‚ê‚Ä‚µ‚Ü‚¤‚½‚ßAˆ—‚ðŠÛ‚²‚ÆƒRƒs[‚µ‚Ä‚«‚Ä‚¢‚éB
-	; ‚±‚±‚Å80h‚Æ”äŠr‚µ‚Ä‚¢‚é‚Ì‚ÍUTF8‚ÅU+0000 c U+007F‚©‚Ç‚¤‚©Šm”F‚·‚é‚½‚ß
+	; JMP_X,Yï¿½É‚Â‚ï¿½ï¿½Ä‚Ìï¿½ï¿½ï¿½ï¿½BMakeJMPï¿½ÅƒRï¿½[ï¿½hï¿½ï¿½ï¿½jï¿½ó‚³‚ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ßAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û‚ï¿½ï¿½ÆƒRï¿½sï¿½[ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½B
+	; ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½80hï¿½Æ”ï¿½rï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ï¿½UTF8ï¿½ï¿½U+0000 ï¿½c U+007Fï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½mï¿½Fï¿½ï¿½ï¿½é‚½ï¿½ï¿½
 	; https://ja.wikipedia.org/wiki/UTF-8
 	cmp		al, 80h;
 	jnb		JMP_X;
@@ -53,14 +48,14 @@ JMP_Y:
 JMP_A:
 	lea		rcx,[rbp + 120h - 198h + 0Ch];
 	call	inputProc1CallAddress;
-	; •ÏŠ·‚µ‚½ƒGƒXƒP[ƒvÏ‚ÝƒeƒLƒXƒgƒAƒhƒŒƒX‚ð•Û‘¶B 10 81 82‚Ì‚æ‚¤‚É‚È‚é
+	; ï¿½ÏŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Gï¿½Xï¿½Pï¿½[ï¿½vï¿½Ï‚Ýƒeï¿½Lï¿½Xï¿½gï¿½Aï¿½hï¿½ï¿½ï¿½Xï¿½ï¿½Û‘ï¿½ï¿½B 10 81 82ï¿½Ì‚æ‚¤ï¿½É‚È‚ï¿½
 	mov		inputProc2Tmp, rax;
-	;ƒJƒEƒ“ƒ^‚Æ‚µ‚ÄŽg‚¤‚Ì‚Å‚à‚Æ‚à‚Æ‚ ‚Á‚½‚à‚Ì‚Í•Û‘¶
+	;ï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½Æ‚ï¿½ï¿½ÄŽgï¿½ï¿½ï¿½Ì‚Å‚ï¿½ï¿½Æ‚ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Í•Û‘ï¿½
 	mov		inputProc1Tmp,rsi;
 	xor		rsi,rsi;
 
 JMP_B:
-	; ‚»‚Ì‚Ü‚ÜƒRƒs[‚µ‚½
+	; ï¿½ï¿½ï¿½Ì‚Ü‚ÜƒRï¿½sï¿½[ï¿½ï¿½ï¿½ï¿½
 	mov		rax, [r14];
 	lea     rdx, [rsp+200h - 1D0h];
 	xorps	xmm0, xmm0;
@@ -71,11 +66,11 @@ JMP_B:
 	movdqa  xmm0, xmmword ptr [inputProc1Var1];
 	movdqu  xmmword ptr [rsp + 200h - 198h], xmm0;
 
-	; ‚PbyteŽæ‚èo‚·
+	; ï¿½Pbyteï¿½ï¿½ï¿½oï¿½ï¿½
 	mov		rbx, inputProc2Tmp;
 	mov		bl, byte ptr [rbx + rsi];
 
-	; null•¶Žšƒ`ƒFƒbƒN
+	; nullï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
 	cmp		bl,0;
 	jz		JMP_C;
 
@@ -89,12 +84,12 @@ JMP_B:
 	mov		byte ptr [rbp + 120h - 1A0h + 6], 0;
 	call	qword ptr [rax + 18h];
 
-	; 1bytei‚ß‚é
+	; 1byteï¿½iï¿½ß‚ï¿½
 	inc		rsi;
 	jmp		JMP_B;
 
 JMP_C:
-	;–ß‚·
+	;ï¿½ß‚ï¿½
 	mov		rsi, inputProc1Tmp;
 
 	push	inputProc1ReturnAddress2;
@@ -104,15 +99,15 @@ inputProc1 ENDP
 ;-------------------------------------------;
 
 inputProc1V130 PROC
-	; eax‚É‚ÍIME‚©‚çutf8‚Ì•¶Žš‚ª“n‚³‚ê‚Ä‚­‚é
+	; eaxï¿½É‚ï¿½IMEï¿½ï¿½ï¿½ï¿½utf8ï¿½Ì•ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½nï¿½ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½
 	mov		eax, dword ptr [rbp + 120h - 18Ch];
-	; ah‚ª0‚Å‚ ‚ê‚Îa-z‚È‚Ç‚Ì1byte‚ÅŽû‚Ü‚é•¶Žš‚È‚Ì‚ÅA•ÏŠ·ˆ—‚Í•K—v‚È‚¢
+	; ahï¿½ï¿½0ï¿½Å‚ï¿½ï¿½ï¿½ï¿½a-zï¿½È‚Ç‚ï¿½1byteï¿½ÅŽï¿½ï¿½Ü‚é•¶ï¿½ï¿½ï¿½È‚Ì‚ÅAï¿½ÏŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í•Kï¿½vï¿½È‚ï¿½
 	cmp		ah, 0;
 	jnz		JMP_A;
 	xor		bl, bl;
 
-	; JMP_X,Y‚É‚Â‚¢‚Ä‚Ìà–¾BMakeJMP‚ÅƒR[ƒh‚ª”j‰ó‚³‚ê‚Ä‚µ‚Ü‚¤‚½‚ßAˆ—‚ðŠÛ‚²‚ÆƒRƒs[‚µ‚Ä‚«‚Ä‚¢‚éB
-	; ‚±‚±‚Å80h‚Æ”äŠr‚µ‚Ä‚¢‚é‚Ì‚ÍUTF8‚ÅU+0000 c U+007F‚©‚Ç‚¤‚©Šm”F‚·‚é‚½‚ß
+	; JMP_X,Yï¿½É‚Â‚ï¿½ï¿½Ä‚Ìï¿½ï¿½ï¿½ï¿½BMakeJMPï¿½ÅƒRï¿½[ï¿½hï¿½ï¿½ï¿½jï¿½ó‚³‚ï¿½Ä‚ï¿½ï¿½Ü‚ï¿½ï¿½ï¿½ï¿½ßAï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Û‚ï¿½ï¿½ÆƒRï¿½sï¿½[ï¿½ï¿½ï¿½Ä‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½B
+	; ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½80hï¿½Æ”ï¿½rï¿½ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Ì‚ï¿½UTF8ï¿½ï¿½U+0000 ï¿½c U+007Fï¿½ï¿½ï¿½Ç‚ï¿½ï¿½ï¿½ï¿½mï¿½Fï¿½ï¿½ï¿½é‚½ï¿½ï¿½
 	; https://ja.wikipedia.org/wiki/UTF-8
 	cmp		al, 80h;
 	jnb		JMP_X;
@@ -134,14 +129,14 @@ JMP_Y:
 JMP_A:
 	lea		rcx,[rbp + 120h - 18Ch];
 	call	inputProc1CallAddress;
-	; •ÏŠ·‚µ‚½ƒGƒXƒP[ƒvÏ‚ÝƒeƒLƒXƒgƒAƒhƒŒƒX‚ð•Û‘¶B 10 81 82‚Ì‚æ‚¤‚É‚È‚é
+	; ï¿½ÏŠï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Gï¿½Xï¿½Pï¿½[ï¿½vï¿½Ï‚Ýƒeï¿½Lï¿½Xï¿½gï¿½Aï¿½hï¿½ï¿½ï¿½Xï¿½ï¿½Û‘ï¿½ï¿½B 10 81 82ï¿½Ì‚æ‚¤ï¿½É‚È‚ï¿½
 	mov		inputProc2Tmp, rax;
-	;ƒJƒEƒ“ƒ^‚Æ‚µ‚ÄŽg‚¤‚Ì‚Å‚à‚Æ‚à‚Æ‚ ‚Á‚½‚à‚Ì‚Í•Û‘¶
+	;ï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½Æ‚ï¿½ï¿½ÄŽgï¿½ï¿½ï¿½Ì‚Å‚ï¿½ï¿½Æ‚ï¿½ï¿½Æ‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì‚Í•Û‘ï¿½
 	mov		inputProc1Tmp,rdi;
 	xor		rdi,rdi;
 
 JMP_B:
-	; ‚»‚Ì‚Ü‚ÜƒRƒs[‚µ‚½
+	; ï¿½ï¿½ï¿½Ì‚Ü‚ÜƒRï¿½sï¿½[ï¿½ï¿½ï¿½ï¿½
 	mov		rax, [r13 + 0];
 	xor		r9d,r9d;
 	mov		r8d, [rbp + 120h - 184h];
@@ -149,15 +144,15 @@ JMP_B:
 	mov		rcx,r13;
 	call	qword ptr [rax + 20h];
 
-	; ‚PbyteŽæ‚èo‚·
+	; ï¿½Pbyteï¿½ï¿½ï¿½oï¿½ï¿½
 	mov		rbx, inputProc2Tmp;
 	mov		bl, byte ptr [rbx + rdi];
 
-	; null•¶Žšƒ`ƒFƒbƒN
+	; nullï¿½ï¿½ï¿½ï¿½ï¿½`ï¿½Fï¿½bï¿½N
 	cmp		bl,0;
 	jz		JMP_C;
 
-	; ƒJƒEƒ“ƒg•â³
+	; ï¿½Jï¿½Eï¿½ï¿½ï¿½gï¿½â³
 	mov		dword ptr [r14+44h] , 2
 
 	mov		rax, [r14];
@@ -179,12 +174,12 @@ JMP_B:
 	mov		byte ptr [rbp + 120h - 19Ah], 0;
 	call	qword ptr [rax + 18h];
 
-	; 1bytei‚ß‚é
+	; 1byteï¿½iï¿½ß‚ï¿½
 	inc		rdi;
 	jmp		JMP_B;
 
 JMP_C:
-	;–ß‚·
+	;ï¿½ß‚ï¿½
 	mov		rdi, inputProc1Tmp;
 
 	push	inputProc1ReturnAddress2;
@@ -193,13 +188,13 @@ inputProc1V130 ENDP
 
 ;-------------------------------------------;
 
-; ‰º‹L‚Íqword ptr [rax+138h];‚ÌŠÖ”i40 57 48 83 EC 20 48 8B 01 48 8B F9 48 8B 90 68 01 00 00j‚©‚çŠ„‚èo‚µ‚½
-; rdi+54h : ƒLƒƒƒŒƒbƒgˆÊ’u
-; rdi+40h : •¶Žš—ñ’·‚³
-; rdi+30h : •¶Žš—ñƒAƒhƒŒƒX
+; ï¿½ï¿½ï¿½Lï¿½ï¿½qword ptr [rax+138h];ï¿½ÌŠÖï¿½ï¿½i40 57 48 83 EC 20 48 8B 01 48 8B F9 48 8B 90 68 01 00 00ï¿½jï¿½ï¿½ï¿½çŠ„ï¿½ï¿½oï¿½ï¿½ï¿½ï¿½
+; rdi+54h : ï¿½Lï¿½ï¿½ï¿½ï¿½ï¿½bï¿½gï¿½Ê’u
+; rdi+40h : ï¿½ï¿½ï¿½ï¿½ï¿½ñ’·‚ï¿½
+; rdi+30h : ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Aï¿½hï¿½ï¿½ï¿½X
 
 inputProc2 PROC
-	mov		inputProc2Tmp2,rsi; // ƒJƒEƒ“ƒ^‚Æ‚µ‚ÄŽg‚¤
+	mov		inputProc2Tmp2,rsi; // ï¿½Jï¿½Eï¿½ï¿½ï¿½^ï¿½Æ‚ï¿½ï¿½ÄŽgï¿½ï¿½
 	xor		rsi,rsi; 
 
 	mov		rcx, qword ptr [rdi + 40h];
@@ -213,17 +208,15 @@ JMP_A:
 	sub		rax, 3;
 	js		JMP_C;
 	mov		al, byte ptr [rcx + rax];
-	cmp		al, ESCAPE_SEQ_1;
-	jz		JMP_B;
-	cmp		al, ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		al, ESCAPE_SEQ_3;
-	jz		JMP_B;
-	cmp		al, ESCAPE_SEQ_4;
-	jnz		JMP_C;
+	cmp		al, 0Ch;
+	jb		JMP_C;
+	cmp		al, 0Eh;
+	jb		JMP_B;
+
+	inc		rsi;
 
 JMP_B:
-	mov		rsi, 2;
+	inc		rsi;
 
 JMP_C:
 	mov		rax, qword ptr [rdi];

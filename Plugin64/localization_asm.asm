@@ -18,15 +18,6 @@ EXTERN generateCString: QWORD
 EXTERN concatCString: QWORD
 EXTERN concat2CString: QWORD
 
-ESCAPE_SEQ_1	=	10h
-ESCAPE_SEQ_2	=	11h
-ESCAPE_SEQ_3	=	12h
-ESCAPE_SEQ_4	=	13h
-LOW_SHIFT		=	0Eh
-HIGH_SHIFT		=	9h
-SHIFT_2			=	LOW_SHIFT
-SHIFT_3			=	900h
-SHIFT_4			=	8F2h
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
 
@@ -57,8 +48,8 @@ localizationProc2 ENDP
 localizationProc3 PROC
 	nop;
 
-	;‹t‹^–â•„(0xBF)‚ªÅ‰‚É—ˆ‚Ä‚¢‚ê‚Î”½“]‚³‚¹‚é
-	cmp		byte ptr[rax+1], 0BFh; // [0]‚Í0x20(white space)
+	;ï¿½tï¿½^ï¿½â•„(0xBF)ï¿½ï¿½ï¿½Åï¿½ï¿½É—ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Î”ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	cmp		byte ptr[rax+1], 0BFh; // [0]ï¿½ï¿½0x20(white space)
 	jnz		JMP_A;
 
 	mov		qword ptr [rsp+20h], 0FFFFFFFFFFFFFFFFh;
@@ -86,8 +77,8 @@ localizationProc3 ENDP
 localizationProc3V130 PROC
 	nop;
 
-	;‹t‹^–â•„(0xBF)‚ªÅ‰‚É—ˆ‚Ä‚¢‚ê‚Î”½“]‚³‚¹‚é
-	cmp		byte ptr[rax+1], 0BFh; // [0]‚Í0x20(white space)
+	;ï¿½tï¿½^ï¿½â•„(0xBF)ï¿½ï¿½ï¿½Åï¿½ï¿½É—ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Î”ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	cmp		byte ptr[rax+1], 0BFh; // [0]ï¿½ï¿½0x20(white space)
 	jnz		JMP_A;
 
 	mov		qword ptr [rsp+20h], 0FFFFFFFFFFFFFFFFh;
@@ -115,8 +106,8 @@ localizationProc3V130 ENDP
 localizationProc4 PROC
 	nop;
 
-	;‹t‹^–â•„(0xBF)‚ªÅ‰‚É—ˆ‚Ä‚¢‚ê‚Î”½“]‚³‚¹‚é
-	cmp		byte ptr[rax+1], 0BFh; // [0]‚Í0x20(white space)
+	;ï¿½tï¿½^ï¿½â•„(0xBF)ï¿½ï¿½ï¿½Åï¿½ï¿½É—ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Î”ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	cmp		byte ptr[rax+1], 0BFh; // [0]ï¿½ï¿½0x20(white space)
 	jnz		JMP_A;
 
 	mov		qword ptr [rsp+20h], 0FFFFFFFFFFFFFFFFh;
@@ -144,8 +135,8 @@ localizationProc4 ENDP
 localizationProc4V130 PROC
 	nop;
 
-	;‹t‹^–â•„(0xBF)‚ªÅ‰‚É—ˆ‚Ä‚¢‚ê‚Î”½“]‚³‚¹‚é
-	cmp		byte ptr[rax+1], 0BFh; // [0]‚Í0x20(white space)
+	;ï¿½tï¿½^ï¿½â•„(0xBF)ï¿½ï¿½ï¿½Åï¿½ï¿½É—ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Î”ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	cmp		byte ptr[rax+1], 0BFh; // [0]ï¿½ï¿½0x20(white space)
 	jnz		JMP_A;
 
 	mov		qword ptr [rsp+20h], 0FFFFFFFFFFFFFFFFh;
@@ -173,8 +164,8 @@ localizationProc4V130 ENDP
 localizationProc5 PROC
 	nop;
 
-	;‹t‹^–â•„(0xBF)‚ªÅ‰‚É—ˆ‚Ä‚¢‚ê‚Î”½“]‚³‚¹‚é
-	cmp		byte ptr[rax+1], 0BFh; // [0]‚Í0x20(white space)
+	;ï¿½tï¿½^ï¿½â•„(0xBF)ï¿½ï¿½ï¿½Åï¿½ï¿½É—ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Î”ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	cmp		byte ptr[rax+1], 0BFh; // [0]ï¿½ï¿½0x20(white space)
 	jnz		JMP_A;
 
 	mov		qword ptr [rsp+20h], 0FFFFFFFFFFFFFFFFh;
@@ -201,11 +192,11 @@ localizationProc5 ENDP
 
 localizationProc5V131 PROC
 
-	;‹t‹^–â•„(0xBF)‚ªÅ‰‚É—ˆ‚Ä‚¢‚ê‚Î”½“]‚³‚¹‚é
-	cmp		byte ptr[rax+1], 0BFh; // [0]‚Í0x20(white space)
+	;ï¿½tï¿½^ï¿½â•„(0xBF)ï¿½ï¿½ï¿½Åï¿½ï¿½É—ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½Î”ï¿½ï¿½]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	cmp		byte ptr[rax+1], 0BFh; // [0]ï¿½ï¿½0x20(white space)
 	jnz		JMP_A;
 
-	mov		qword ptr [rsp+20h], 0FFFFFFFFFFFFFFFFh; end (stack“n‚µ
+	mov		qword ptr [rsp+20h], 0FFFFFFFFFFFFFFFFh; end (stackï¿½nï¿½ï¿½
 	mov		r9, 1;	 // start
 	mov		r8, rax; // text
 	xor		rdx,rdx;  // pos1
@@ -237,14 +228,14 @@ localizationProc6 PROC
 	mov		rcx, rsi;
 	call	localizationProc1CallAddress2;
 
-	; 1450”N
+	; 1450ï¿½N
 	or		r9, 0FFFFFFFFFFFFFFFFh;
 	xor		r8d, r8d;
 	mov		rdx, year;
 	mov		rcx, rsi;
 	call	localizationProc1CallAddress2;
 	
-	; 1450”N1Œ
+	; 1450ï¿½N1ï¿½ï¿½
 	or		r9, 0FFFFFFFFFFFFFFFFh;
 	xor		r8d, r8d;
 	lea		rdx, [rbp+57h - 78h];
@@ -268,14 +259,14 @@ localizationProc6V131 PROC
 	mov		rcx, rsi;
 	call	localizationProc1CallAddress2;
 
-	; 1450”N
+	; 1450ï¿½N
 	or		r9, 0FFFFFFFFFFFFFFFFh;
 	xor		r8d, r8d;
 	mov		rdx, year;
 	mov		rcx, rsi;
 	call	localizationProc1CallAddress2;
 	
-	; 1450”N1Œ
+	; 1450ï¿½N1ï¿½ï¿½
 	or		r9, 0FFFFFFFFFFFFFFFFh;
 	xor		r8d, r8d;
 	lea		rdx, [rbp+57h - 78h];
@@ -297,28 +288,28 @@ localizationProc7 PROC
 	mov		rcx, rdi;
 	call	localizationProc1CallAddress2;
 
-	; 1450”N
+	; 1450ï¿½N
 	or		r9, 0FFFFFFFFFFFFFFFFh;
 	xor		r8d, r8d;
 	mov		rdx, year;
 	mov		rcx, rdi;
 	call	localizationProc1CallAddress2;
 
-	; 1450”N1Œ
+	; 1450ï¿½N1ï¿½ï¿½
 	or		r9, 0FFFFFFFFFFFFFFFFh;
 	xor		r8d, r8d;
 	lea		rdx, [rbp+8];
 	mov		rcx, rdi;
 	call	localizationProc1CallAddress2;
 
-	; 1450”N1Œ1
+	; 1450ï¿½N1ï¿½ï¿½1
 	or		r9, 0FFFFFFFFFFFFFFFFh;
 	xor		r8d, r8d;
 	lea		rdx, [rsp+168h - 140h];
 	mov		rcx, rdi;
 	call	localizationProc1CallAddress2;
 
-	; 1450”N1Œ1“ú
+	; 1450ï¿½N1ï¿½ï¿½1ï¿½ï¿½
 	or		r9, 0FFFFFFFFFFFFFFFFh;
 	xor		r8d, r8d;
 	mov		rdx, day;
@@ -326,7 +317,7 @@ localizationProc7 PROC
 	call	localizationProc1CallAddress2;
 	nop;
 
-	; ˆÈ‰ºŠJ•ú‚·‚é‚½‚ß‚¾‚¯‚É•K—v
+	; ï¿½È‰ï¿½ï¿½Jï¿½ï¿½ï¿½ï¿½ï¿½é‚½ï¿½ß‚ï¿½ï¿½ï¿½ï¿½É•Kï¿½v
 	lea     r8, [rsp + 168h - 120h];
 	lea     rdx, [rsp + 168h - 140h];
 	lea     rcx, [rbp - 18h];
@@ -381,21 +372,21 @@ localizationProc7V131 ENDP
 
 localizationProc8 PROC
 
-	; ”N
+	; ï¿½N
 	mov		r8d, 1;
 	mov		rdx, year;
 	lea		rcx, [rbp-59h];
 	call    generateCString;
 	nop;
 
-	; 1450”N
+	; 1450ï¿½N
 	lea		r8, [rbp-59h];
 	lea		rdx, [rbp-31h];
 	lea		rcx, [rbp-11h];
 	call	concatCString;
 	nop;
 
-	; 1450”N1Œ
+	; 1450ï¿½N1ï¿½ï¿½
 	lea		r8, [rbp+0Fh];
 	mov		rdx, rax;
 	mov		rcx, rdi;

@@ -14,6 +14,7 @@ namespace MainText {
 		uintptr_t mainTextProc3ReturnAddress1;
 		uintptr_t mainTextProc3ReturnAddress2;
 		uintptr_t mainTextProc4ReturnAddress;
+		uintptr_t JmpAddress;
 	}
 
 	DllError mainTextProc1Injector(RunOptions options) {
@@ -276,6 +277,26 @@ namespace MainText {
 		return e;
 	}
 
+	DllError readYamlProcInjector(RunOptions options) { //put this function here temporarily
+		DllError e = {};
+
+		// jns eu4.7FF6F05B920E
+		BytePattern::temp_instance().find_pattern("0F 89 03 03 00 00 41 C6 07 3F BE 02 00 00 00 B0 20 0F B6 0B 84 C8 74 0B");
+		if (BytePattern::temp_instance().has_size(1, u8"修正读取Yaml本地化文件时报错")) {
+			uintptr_t address = BytePattern::temp_instance().get_first().address();
+
+			// direct jmp to eu4.7FF6F05B920E bypass the validator
+			JmpAddress = address + 0x309;
+
+			Injector::MakeJMP(address, JmpAddress, true);
+		}
+		else {
+			e.mainText.unmatchdMainTextProc4Injector = true;
+		}
+		return e;
+
+	}
+
 	DllError Init(RunOptions options) {
 		DllError result = {};
 
@@ -283,6 +304,7 @@ namespace MainText {
 		result |= mainTextProc2Injector(options);
 		result |= mainTextProc3Injector(options);
 		result |= mainTextProc4Injector(options);
+		result |= readYamlProcInjector(options);
 
 		return result;
 	}
