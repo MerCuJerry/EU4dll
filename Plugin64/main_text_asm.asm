@@ -5,15 +5,6 @@ EXTERN mainTextProc3ReturnAddress1: QWORD
 EXTERN mainTextProc3ReturnAddress2: QWORD
 EXTERN mainTextProc4ReturnAddress: QWORD
 
-ESCAPE_SEQ_1	=	10h
-ESCAPE_SEQ_2	=	11h
-ESCAPE_SEQ_3	=	12h
-ESCAPE_SEQ_4	=	13h
-LOW_SHIFT		=	0Eh
-HIGH_SHIFT		=	9h
-SHIFT_2			=	LOW_SHIFT
-SHIFT_3			=	900h
-SHIFT_4			=	8F2h
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
 
@@ -25,42 +16,37 @@ NOT_DEF			=	2026h
 mainTextProc1 PROC
 	movsxd	rax, edi;
 
-	cmp		byte ptr[rax + rbx], ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		byte ptr[rax + rbx], ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		byte ptr[rax + rbx], ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		byte ptr[rax + rbx], ESCAPE_SEQ_4;
-	jz		JMP_D;
-	movzx	eax, byte ptr [rax+rbx];
-	jmp		JMP_E;
+	cmp     byte ptr[rax + rbx], 7Eh;
+	ja      JMP_A;
+	movzx   eax, byte ptr[rax + rbx];
+	jmp 	JMP_E;
 
 JMP_A:
-	movzx	eax, word ptr[rax + rbx + 1];
-	jmp		JMP_F;
+	movsxd  rdi, edi;
+	movzx   eax, byte ptr [rdi + rbx];
+	and     ax, 1Fh;
+	cmp     byte ptr [rdi + rbx], 0E0h;
+	jb      JMP_B;
+	and     ax, 0Fh;
+
+	inc		rdi;
+	rcl     ax, 6;
+	xor     al, 80h;
+	xor     al, byte ptr [rdi + rbx];
 
 JMP_B:
-	movzx	eax, word ptr[rax + rbx + 1];
-	sub		eax, SHIFT_2;
-	jmp		JMP_F;
+	inc		rdi;
+	rcl     ax, 6;
+	xor     al, 80h;
+	xor     al, byte ptr [rdi + rbx]
 
-JMP_C:
-	movzx	eax, word ptr[rax + rbx + 1];
-	add		eax, SHIFT_3;
-	jmp		JMP_F;
-
-JMP_D:
-	movzx	eax, word ptr[rax + rbx + 1];
-	add		eax, SHIFT_4;
-
-JMP_F:
-	movzx	eax, ax;
-	add		edi, 2;
-	cmp		eax, NO_FONT;
+	movzx 	eax, ax;
+	cmp		ax, NO_FONT;
 
 	ja		JMP_E;
-	mov		eax, NOT_DEF;
+	mov		ax, NOT_DEF;
+
+
 JMP_E:
 	movss	xmm3, dword ptr [r15+848h];
 	mov		rbx, qword ptr [r15+rax*8];
@@ -73,65 +59,6 @@ mainTextProc1 ENDP
 ;-------------------------------------------;
 
 mainTextProc2 PROC
-	movsxd  rdx, edi;
-	movsxd  rcx, r14d;
-	mov     r10, [rsp+858h-7E0h];
-
-	movzx	eax, byte ptr [rdx+r10];
-	mov		r9, mainTextProc2BufferAddress;
-	mov     byte ptr [rcx+r9], al;
-
-	inc     r14d;
-	inc		rcx;
-
-	cmp		al, ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		al, ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		al, ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		al, ESCAPE_SEQ_4;
-	jz		JMP_D;
-	jmp		JMP_E;
-
-JMP_A:
-	movzx	eax, word ptr[rdx+r10+1];
-	mov		word ptr [rcx+r9], ax;
-	jmp		JMP_F;
-
-JMP_B:
-	movzx	eax, word ptr[rdx+r10+1];
-	mov		word ptr [rcx+r9], ax;
-	sub		eax, SHIFT_2;
-	jmp		JMP_F;
-
-JMP_C:
-	movzx	eax, word ptr [rdx+r10+1];
-	mov		word ptr [rcx+r9], ax;
-	add		eax, SHIFT_3;
-	jmp		JMP_F;
-
-JMP_D:
-	movzx	eax, word ptr [rdx+r10+1];
-	mov		word ptr [rcx+r9], ax;
-	add		eax, SHIFT_4;
-
-JMP_F:
-	movzx	eax, ax;
-	add		r14d, 2;
-	add		rcx,2;
-	cmp		eax, NO_FONT;
-
-	ja		JMP_G;
-	mov		eax, NOT_DEF;
-
-JMP_G:
-	add		rdx, 2;
-	add		edi, 2;
-JMP_E:
-
-	mov		mainTextProc2TmpCharacter, eax;
-	
 	push	mainTextProc2ReturnAddress;
 	ret;
 mainTextProc2 ENDP
@@ -150,52 +77,37 @@ mainTextProc2_v131 PROC
 	inc     r14d;
 	inc		rcx;
 
-	cmp		al, ESCAPE_SEQ_1;
-	jz		JMP_A;
-	cmp		al, ESCAPE_SEQ_2;
-	jz		JMP_B;
-	cmp		al, ESCAPE_SEQ_3;
-	jz		JMP_C;
-	cmp		al, ESCAPE_SEQ_4;
-	jz		JMP_D;
-	jmp		JMP_E;
+	cmp 	al, 0C0h;
+	jb		JMP_A;
+	mov 	edi, eax;
+	and		edi, 1Fh;
+	cmp		al, 0E0h;
+	jb		JMP_B;
+	and		edi, 0Fh
 
-JMP_A:
-	movzx	eax, word ptr[rdx+r10+1];
-	mov		word ptr [rcx+r9], ax;
-	jmp		JMP_F;
+	inc 	rdx;
+	rcl		edi, 6;
+	xor		edi, 80h;
+	movzx 	eax, byte ptr [rdx + r10];
+	xor		edi, eax;
+	mov		byte ptr [rcx + r9], al;
+	inc		rcx;
+	inc		r14d;
 
 JMP_B:
-	movzx	eax, word ptr[rdx+r10+1];
-	mov		word ptr [rcx+r9], ax;
-	sub		eax, SHIFT_2;
-	jmp		JMP_F;
+	inc 	rdx;
+	rcl		edi, 6;
+	xor		edi, 80h;
+	movzx 	eax, byte ptr [rdx + r10];
+	xor		edi, eax;
+	mov		byte ptr [rcx + r9], al;
+	inc		rcx;
+	inc		r14d;
 
-JMP_C:
-	movzx	eax, word ptr [rdx+r10+1];
-	mov		word ptr [rcx+r9], ax;
-	add		eax, SHIFT_3;
-	jmp		JMP_F;
+	mov 	eax, edi;
+	mov		edi, edx;
 
-JMP_D:
-	movzx	eax, word ptr [rdx+r10+1];
-	mov		word ptr [rcx+r9], ax;
-	add		eax, SHIFT_4;
-
-JMP_F:
-	movzx	eax, ax;
-	add		r14d, 2;
-	add		rcx,2;
-	cmp		eax, NO_FONT;
-
-	ja		JMP_G;
-	mov		eax, NOT_DEF;
-
-JMP_G:
-	add		rdx, 2;
-	add		edi, 2;
-JMP_E:
-
+JMP_A:
 	mov		mainTextProc2TmpCharacter, eax;
 	
 	push	mainTextProc2ReturnAddress;
