@@ -9,6 +9,7 @@ This dll makes it possible to display double-byte characters on Europa Universal
 - macOS is not supported. I don't have those plans.
 - Linux is not supported.
 - Displaying very long tooltips can cause **CTD**. See [here](https://github.com/matanki-saito/EU4dll/issues/226).
+- Its still WIP, some feature like typing UTF-8 character will crash your game!!
 
 ## How to use
 
@@ -18,14 +19,7 @@ This dll makes it possible to display double-byte characters on Europa Universal
   3. Subscribe multibyte mods from steam or add mods to paradox user directory in your documents folder.
   4. Enable mods on game luncher
   5. Play game. 👍
-
-- Automatic install
-
-  1. Download [Simple Installer](https://github.com/matanki-saito/SimpleInstaller)
-  2. See [Install Guide (Japanese)](https://paradoxian-japan-mod.com/page-1295/)
-  3. Enable mods on game luncher
-  4. Play game. 👍
-
+  6. 
 ## Find bugs
 
 If you find a bug, **create a issue** in this repository.
@@ -86,3 +80,4 @@ MIT Licence
 This dll was forked by the following project. Thank you so much.
 
 [EU4CHS](https://bitbucket.org/kelashi/eu4chs/src/master/)
+[EU4JPS](https://github.com/matanki-saito/EU4dll)
