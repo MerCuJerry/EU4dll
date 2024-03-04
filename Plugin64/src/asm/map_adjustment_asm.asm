@@ -124,13 +124,13 @@ JMP_A:
 	and     dx, 0Fh;
 
 	inc		rcx;
-	rol     dx, 6;
+	shl     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + rcx];
 
 JMP_B:
 	inc		rcx;
-	rol     dx, 6;
+	shl     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + rcx]
 

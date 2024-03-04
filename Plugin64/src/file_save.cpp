@@ -91,7 +91,7 @@ namespace FileSave {
 
 		return e;
 	}
-
+/*
 	DllError fileSaveProc3Injector(RunOptions options) {
 		DllError e = {};
 		switch (options.version) {
@@ -100,8 +100,6 @@ namespace FileSave {
 			if (BytePattern::temp_instance().has_size(1, u8"ダイアログでのセーブエントリのタイトルを表示できるようにする")) {
 				//  xor     r8d, r8d
 				uintptr_t address = BytePattern::temp_instance().get_first().address();
-
-				fileSaveProc3CallAddress = (uintptr_t)utf8ToEscapedStr;
 
 				// call {xxxxx}
 				fileSaveProc3CallAddress2 = Injector::GetBranchDestination(address + 0xD).as_int();
@@ -131,8 +129,6 @@ namespace FileSave {
 			BytePattern::temp_instance().find_pattern("4C 8D 45 00 48 8D 15 ? ? ? ? 48 8D 4C 24 70 E8 ? ? ? ? 90");
 			if (BytePattern::temp_instance().has_size(1, u8"ダイアログでのセーブエントリのツールチップを表示できるようにする1")) {
 				uintptr_t address = BytePattern::temp_instance().get_first().address();
-
-				fileSaveProc4CallAddress = (uintptr_t)utf8ToEscapedStr2;
 
 				// lea rdx, {aZy}
 				fileSaveProc4MarkerAddress = Injector::GetBranchDestination(address + 4).as_int();
@@ -164,8 +160,6 @@ namespace FileSave {
 			if (BytePattern::temp_instance().has_size(1, u8"ダイアログでのセーブエントリのツールチップを表示できるようにする2")) {
 				uintptr_t address = BytePattern::temp_instance().get_first().address();
 
-				fileSaveProc5CallAddress = (uintptr_t)utf8ToEscapedStr2;
-
 				// lea rdx, {aZy}
 				fileSaveProc5MarkerAddress = Injector::GetBranchDestination(address + 7).as_int();
 
@@ -194,8 +188,6 @@ namespace FileSave {
 			BytePattern::temp_instance().find_pattern("4C 8D 85 90 03 00 00 48 8D 15 ? ? ? ? 48 8D 4C 24 30");
 			if (BytePattern::temp_instance().has_size(1, u8"スタート画面でのコンティニューのツールチップ")) {
 				uintptr_t address = BytePattern::temp_instance().get_first().address();
-
-				fileSaveProc6CallAddress = (uintptr_t)utf8ToEscapedStr2;
 
 				// lea r8, {aZy}
 				fileSaveProc6MarkerAddress = Injector::GetBranchDestination(address + 7).as_int();
@@ -238,8 +230,6 @@ namespace FileSave {
 				break;
 			}
 
-			fileSaveProc7CallAddress = (uintptr_t)utf8ToEscapedStr2;
-
 			// call    qword ptr [rax+80h]
 			fileSaveProc7ReturnAddress = address + 0xF;
 
@@ -252,7 +242,7 @@ namespace FileSave {
 
 		return e;
 	}
-
+*/
 	DllError fileSaveProc8Injector(RunOptions options) {
 		DllError e = {};
 
@@ -280,17 +270,18 @@ namespace FileSave {
 	DllError Init(RunOptions options) {
 		DllError result = {};
 
-		/* UTF-8ファイルを列挙できない問題は解決された */
+	
+		//UTF-8ファイルを列挙できない問題は解決された
 		result |= fileSaveProc1Injector(options);
 		result |= fileSaveProc2Injector(options);
-		result |= fileSaveProc3Injector(options);
+		//result |= fileSaveProc3Injector(options);
 		// これは使われなくなった？
 		//result |= fileSaveProc4Injector(options);
-		result |= fileSaveProc5Injector(options);
-		result |= fileSaveProc6Injector(options);
-		result |= fileSaveProc7Injector(options);
+		//result |= fileSaveProc5Injector(options);
+		//result |= fileSaveProc6Injector(options);
+		//result |= fileSaveProc7Injector(options);
 		result |= fileSaveProc8Injector(options);
-
+	
 		return result;
 	}
 }

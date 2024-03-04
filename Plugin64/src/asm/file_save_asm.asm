@@ -59,7 +59,6 @@ fileSaveProc2 ENDP
 
 fileSaveProc3V1316 PROC
 	lea		rcx, dword ptr [rbx +580h];
-	call	fileSaveProc3CallAddress;
 	mov		rdx, rax;
 
 	xor		r8d, r8d;
@@ -74,7 +73,6 @@ fileSaveProc3V1316 ENDP
 
 fileSaveProc4 PROC
 	lea		rcx, [rsp + 1A8h -138h];
-	call	fileSaveProc4CallAddress;
 	mov		rcx, rax;
 
 	mov		rdx, fileSaveProc4MarkerAddress;
@@ -88,7 +86,6 @@ fileSaveProc4 ENDP
 
 fileSaveProc5V1316 PROC
 	lea		rcx, [r14 + 5C0h];
-	call	fileSaveProc5CallAddress;
 	mov		r8, rax;
 
 	mov		rdx, fileSaveProc5MarkerAddress;
@@ -102,7 +99,6 @@ fileSaveProc5V1316 ENDP
 
 fileSaveProc6V130 PROC
 	lea		rcx, [rbp +730h - 3A0h];
-	call	fileSaveProc6CallAddress;
 	mov		r8, rax;
 
 	mov		rdx, fileSaveProc6MarkerAddress;
@@ -117,7 +113,6 @@ fileSaveProc6V130 ENDP
 fileSaveProc7 PROC
 
 	lea		rcx, [rsp + 58h - 30h];
-	call	fileSaveProc7CallAddress;
 	mov		rdx, rax;
 
 	lea		rcx, [rbx+0C8h];

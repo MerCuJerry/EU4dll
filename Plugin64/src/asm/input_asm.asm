@@ -15,15 +15,15 @@ NOT_DEF			=	2026h
 .CODE
 
 inputProc1V130 PROC
-	; eax�ɂ�IME����utf8�̕������n����Ă���
+	; eaxにはIMEからutf8の文字が渡されてくる
 	mov		eax, dword ptr [rbp + 120h - 18Ch];
-	; ah��0�ł����a-z�Ȃǂ�1byte�Ŏ��܂镶���Ȃ̂ŁA�ϊ������͕K�v�Ȃ�
+	; ahが0であればa-zなどの1byteで収まる文字なので、変換処理は必要ない
 	cmp		ah, 0;
-	jnz		JMP_A;
+	jnp		JMP_A;
 	xor		bl, bl;
 
-	; JMP_X,Y�ɂ��Ă̐����BMakeJMP�ŃR�[�h���j�󂳂�Ă��܂����߁A�������ۂ��ƃR�s�[���Ă��Ă���B
-	; ������80h�Ɣ�r���Ă���̂�UTF8��U+0000 �c U+007F���ǂ����m�F���邽��
+	; JMP_X,Yについての説明。MakeJMPでコードが破壊されてしまうため、処理を丸ごとコピーしてきている。
+	; ここで80hと比較しているのはUTF8でU+0000 … U+007Fかどうか確認するため
 	; https://ja.wikipedia.org/wiki/UTF-8
 	cmp		al, 80h;
 	jnb		JMP_X;
@@ -45,14 +45,14 @@ JMP_Y:
 JMP_A:
 	lea		rcx,[rbp + 120h - 18Ch];
 	call	inputProc1CallAddress;
-	; �ϊ������G�X�P�[�v�ς݃e�L�X�g�A�h���X��ۑ��B 10 81 82�̂悤�ɂȂ�
+	; 変換したエスケープ済みテキストアドレスを保存。 10 81 82のようになる
 	mov		inputProc2Tmp, rax;
-	;�J�E���^�Ƃ��Ďg���̂ł��Ƃ��Ƃ��������͕̂ۑ�
+	;カウンタとして使うのでもともとあったものは保存
 	mov		inputProc1Tmp,rdi;
 	xor		rdi,rdi;
 
 JMP_B:
-	; ���̂܂܃R�s�[����
+	; そのままコピーした
 	mov		rax, [r13 + 0];
 	xor		r9d,r9d;
 	mov		r8d, [rbp + 120h - 184h];
@@ -60,15 +60,14 @@ JMP_B:
 	mov		rcx,r13;
 	call	qword ptr [rax + 20h];
 
-	; �Pbyte���o��
+	; １byte取り出す
 	mov		rbx, inputProc2Tmp;
 	mov		bl, byte ptr [rbx + rdi];
 
-	; null�����`�F�b�N
+	; null文字チェック
 	cmp		bl,0;
 	jz		JMP_C;
 
-	; �J�E���g�␳
 	mov		dword ptr [r14+44h] , 2
 
 	mov		rax, [r14];
@@ -90,12 +89,12 @@ JMP_B:
 	mov		byte ptr [rbp + 120h - 19Ah], 0;
 	call	qword ptr [rax + 18h];
 
-	; 1byte�i�߂�
+	; 1byte進める
 	inc		rdi;
 	jmp		JMP_B;
 
 JMP_C:
-	;�߂�
+	;戻す
 	mov		rdi, inputProc1Tmp;
 
 	push	inputProc1ReturnAddress2;
@@ -104,13 +103,13 @@ inputProc1V130 ENDP
 
 ;-------------------------------------------;
 
-; ���L��qword ptr [rax+138h];�̊֐��i40 57 48 83 EC 20 48 8B 01 48 8B F9 48 8B 90 68 01 00 00�j���犄��o����
-; rdi+54h : �L�����b�g�ʒu
-; rdi+40h : �����񒷂�
-; rdi+30h : ������A�h���X
+; 下記はqword ptr [rax+138h];の関数（40 57 48 83 EC 20 48 8B 01 48 8B F9 48 8B 90 68 01 00 00）から割り出した
+; rdi+54h : キャレット位置
+; rdi+40h : 文字列長さ
+; rdi+30h : 文字列アドレス
 
 inputProc2 PROC
-	mov		inputProc2Tmp2,rsi; // �J�E���^�Ƃ��Ďg��
+	mov		inputProc2Tmp2,rsi; // カウンタとして使う
 	xor		rsi,rsi; 
 
 	mov		rcx, qword ptr [rdi + 40h];

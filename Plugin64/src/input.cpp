@@ -34,7 +34,6 @@ namespace Input {
 			else {
 				e.input.unmatchdInputProc1Injector = true;
 			}
-
 			// call    qword ptr [rax+18h]
 			BytePattern::temp_instance().find_pattern("FF 50 18 E9 ? ? 00 00 49 8B 45 00");
 			if (BytePattern::temp_instance().has_size(1, u8"入力した文字をutf8からエスケープ列へ変換する２")) {
@@ -45,7 +44,6 @@ namespace Input {
 			else {
 				e.input.unmatchdInputProc1Injector = true;
 			}
-
 			break;
 		default:
 			e.input.versionInputProc1Injector = true;

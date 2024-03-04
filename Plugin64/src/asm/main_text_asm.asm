@@ -30,13 +30,13 @@ JMP_A:
 	and     ax, 0Fh;
 
 	inc		rdi;
-	rol     ax, 6;
+	shl     ax, 6;
 	xor     al, 80h;
 	xor     al, byte ptr [rdi + rbx];
 
 JMP_B:
 	inc		rdi;
-	rol     ax, 6;
+	shl     ax, 6;
 	xor     al, 80h;
 	xor     al, byte ptr [rdi + rbx]
 
@@ -87,7 +87,7 @@ mainTextProc2_v131 PROC
 	and		edi, 0Fh
 
 	inc 	rdx;
-	rol		edi, 6;
+	shl		edi, 6;
 	xor		edi, 80h;
 	movzx 	eax, byte ptr [rdx + r10];
 	xor		edi, eax;
@@ -97,7 +97,7 @@ mainTextProc2_v131 PROC
 
 JMP_B:
 	inc 	rdx;
-	rol		edi, 6;
+	shl		edi, 6;
 	xor		edi, 80h;
 	movzx 	eax, byte ptr [rdx + r10];
 	xor		edi, eax;
