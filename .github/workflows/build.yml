@@ -12,24 +12,18 @@ jobs:
     if: "! contains(github.event.head_commit.message, '[ci skip]')"
 
     steps:
-    - name: Get source
-      uses: actions/checkout@v4
-
+    - uses: actions/checkout@v4
     - name: Setup Nuget
       uses: nuget/setup-nuget@v2
       with:
-        nuget-version: '5.3.1'
-
+        nuget-version: 'latest'
     - name: Restore nuget db
       run: nuget restore EU4JPS.sln
-
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
-
     - name: Build source
       run: msbuild EU4JPS.sln -p:Configuration=release -p:platform=x64
       shell: cmd
-
     - name: Upload dll file
       uses: actions/upload-artifact@v4
       with:

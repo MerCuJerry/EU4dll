@@ -171,14 +171,10 @@ copy "$(TargetPath)" "C:\Program Files\Epic Games\EuropaUniversalis4"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="auto_update.cpp" />
     <ClCompile Include="dllmain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="version.def" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="auto_update.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
