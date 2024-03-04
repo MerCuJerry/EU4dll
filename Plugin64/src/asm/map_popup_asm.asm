@@ -13,7 +13,7 @@ NOT_DEF			=	2026h
 
 .CODE
 mapPopupProc1 PROC
-	cmp		byte ptr[rdi + rax], 0C4h;
+	cmp		byte ptr[rdi + rax], 0C2h;
 	jb		JMP_A;
 
 	movzx	r8d, byte ptr [rdi + rax];
@@ -42,7 +42,7 @@ mapPopupProc1 ENDP
 ;-------------------------------------------;
 
 mapPopupProc2V130 PROC
-	cmp     byte ptr[rax + rdi], 0C4h;
+	cmp     byte ptr[rax + rdi], 0C2h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rdi];
 	jmp 	JMP_H;
@@ -83,7 +83,7 @@ mapPopupProc2V130 ENDP
 ;-------------------------------------------;
 
 mapPopupProc3V130 PROC
-	cmp     byte ptr[rax + rbx], 0C4h;
+	cmp     byte ptr[rax + rbx], 0C2h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rbx];
 	jmp 	JMP_H;

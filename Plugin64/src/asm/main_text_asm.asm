@@ -16,7 +16,7 @@ NOT_DEF			=	2026h
 mainTextProc1 PROC
 	movsxd	rax, edi;
 
-	cmp     byte ptr[rax + rbx], 0C4h;
+	cmp     byte ptr[rax + rbx], 0C2h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rbx];
 	jmp 	JMP_E;
@@ -25,7 +25,6 @@ JMP_A:
 	movsxd  rdi, edi;
 	movzx   eax, byte ptr [rdi + rbx];
 	and     ax, 1Fh;
-	;强行转义 C2A7 or not?
 	cmp     byte ptr [rdi + rbx], 0E0h;
 	jb      JMP_B;
 	and     ax, 0Fh;
@@ -40,9 +39,6 @@ JMP_B:
 	rol     ax, 6;
 	xor     al, 80h;
 	xor     al, byte ptr [rdi + rbx]
-	test	ah, ah;
-	jnz		JMP_C;
-	dec		rdi;
 
 JMP_C:
 	movzx 	eax, ax;
@@ -111,12 +107,6 @@ JMP_B:
 
 	mov 	eax, edi;
 	mov		edi, edx;
-	test	ah, ah; C2A7 ; ;
-	jnz		JMP_A;
-	mov		byte ptr [rcx + r9 - 2], al;
-	dec		rdx;
-	dec		rcx;
-	dec		r14d;
 JMP_A:
 	mov		mainTextProc2TmpCharacter, eax;
 	

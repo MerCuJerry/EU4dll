@@ -12,7 +12,7 @@ NOT_DEF			=	2026h
 
 .CODE
 eventDialogProc1V132 PROC
-	cmp     byte ptr[rax + rdx], 0C4h;
+	cmp     byte ptr[rax + rdx], 0C2h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rdx];
 	mov		eventDialogProc1Flag, 0;

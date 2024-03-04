@@ -6,7 +6,7 @@ MAP_LIMIT		=	2Dh-1
 
 .CODE
 mapNudgeViewProc1V136 PROC
-	cmp     byte ptr[rax + rcx], 0C4h;
+	cmp     byte ptr[rax + rcx], 0C2h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + rcx];
 	jmp 	JMP_F;

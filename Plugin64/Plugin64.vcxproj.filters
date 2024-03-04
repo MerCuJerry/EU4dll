@@ -198,9 +198,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
     <MASM Include="src\asm\font_asm.asm">
       <Filter>Source Files\app\font</Filter>
     </MASM>
@@ -246,5 +243,8 @@
     <MASM Include="src\asm\c_bitmap_font_asm.asm">
       <Filter>Source Files\app\c_bitmap_font</Filter>
     </MASM>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

@@ -13,7 +13,7 @@ NOT_DEF			=	2026h
 
 .CODE
 mapViewProc1 PROC
-	cmp     byte ptr[rax + r8], 0C4h;
+	cmp     byte ptr[rax + r8], 0C2h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + r8];
 	jmp 	JMP_G;
@@ -73,7 +73,7 @@ mapViewProc1 ENDP
 mapViewProc2V130 PROC
 	lea     r9, [r12 + 120h];
 
-	cmp     byte ptr[rax + r15], 0C4h;
+	cmp     byte ptr[rax + r15], 0C2h;
 	ja      JMP_A;
 	movzx   eax, byte ptr[rax + r15];
 	jmp 	JMP_E;
@@ -117,7 +117,7 @@ mapViewProc2V130 ENDP
 mapViewProc3 PROC
     mov		qword ptr[rsp + 488h - 448h],0;
 
-	cmp		byte ptr [rax + r15], 0C4h;
+	cmp		byte ptr [rax + r15], 0C2h;
 	ja		JMP_A;
 
 	movzx	r8d, byte ptr[rax + r15];
