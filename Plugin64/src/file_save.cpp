@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "plugin_64.h"
-#include "escape_tool.h"
 
 namespace FileSave {
 	extern "C" {
@@ -72,8 +71,6 @@ namespace FileSave {
 			BytePattern::temp_instance().find_pattern(pattern);
 			if (BytePattern::temp_instance().has_size(1, u8"ファイル名をUTF-8に変換して保存できるようにする")) {
 				uintptr_t address = BytePattern::temp_instance().get_first().address(offset);
-
-				fileSaveProc2CallAddress = (uintptr_t) escapedStrToUtf8;
 
 				// jnz     short loc_xxxxx
 				fileSaveProc2ReturnAddress = address + 0x14 + 0x1B;

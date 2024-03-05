@@ -1,6 +1,5 @@
 EXTERN	inputProc1ReturnAddress1	:	QWORD
 EXTERN	inputProc1ReturnAddress2	:	QWORD
-EXTERN	inputProc1CallAddress		:	QWORD
 EXTERN	inputProc2ReturnAddress		:	QWORD
 
 NO_FONT			=	98Fh
@@ -8,7 +7,6 @@ NOT_DEF			=	2026h
 
 .DATA
 	inputProc1Var1	DB		03,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
-	inputProc1Tmp	DQ		0
 	inputProc2Tmp	DQ		0
 	inputProc2Tmp2	DQ		0
 
@@ -42,13 +40,11 @@ JMP_Y:
 	push	inputProc1ReturnAddress1;
 	ret;
 
-JMP_A:
-	lea		rcx,[rbp + 120h - 18Ch];
-	call	inputProc1CallAddress;
-	; 変換したエスケープ済みテキストアドレスを保存。 10 81 82のようになる
+JMP_A:	; Change here can support
+	lea		rax,[rbp + 120h - 18Ch];
 	mov		inputProc2Tmp, rax;
 	;カウンタとして使うのでもともとあったものは保存
-	mov		inputProc1Tmp,rdi;
+	push	rdi;
 	xor		rdi,rdi;
 
 JMP_B:
@@ -60,16 +56,17 @@ JMP_B:
 	mov		rcx,r13;
 	call	qword ptr [rax + 20h];
 
-	; １byte取り出す
+	; １byte取り出す Change here
 	mov		rbx, inputProc2Tmp;
 	mov		bl, byte ptr [rbx + rdi];
 
 	; null文字チェック
-	cmp		bl,0;
-	jz		JMP_C;
+	test	bl,bl;
+	je		JMP_C;
 
 	mov		dword ptr [r14+44h] , 2
 
+	; eu4.00007FF7740F6122
 	mov		rax, [r14];
 	lea     rdx, [rsp+220h - 1F0h];
 	xorps	xmm0, xmm0;
@@ -95,8 +92,7 @@ JMP_B:
 
 JMP_C:
 	;戻す
-	mov		rdi, inputProc1Tmp;
-
+	pop		rdi;
 	push	inputProc1ReturnAddress2;
 	ret;
 inputProc1V130 ENDP

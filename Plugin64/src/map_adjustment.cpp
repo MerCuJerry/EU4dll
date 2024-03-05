@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "plugin_64.h"
-#include "escape_tool.h"
 
 namespace MapAdjustment {
 	extern "C" {

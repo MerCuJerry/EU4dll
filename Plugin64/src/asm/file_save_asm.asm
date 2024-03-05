@@ -36,9 +36,6 @@ fileSaveProc1 ENDP
 ;-------------------------------------------;
 
 fileSaveProc2 PROC
-	mov		rcx, rax;
-	call	fileSaveProc2CallAddress;
-
 	cmp		qword ptr [rax+18h], 10h;
 	jb		JMP_A;
 	mov		rax, [rax];

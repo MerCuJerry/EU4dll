@@ -178,7 +178,6 @@ copy "$(TargetPath)" "C:\Program Files\Epic Games\EuropaUniversalis4\plugins"</C
     <ClInclude Include="inc\assembly.hpp" />
     <ClInclude Include="inc\byte_pattern.h" />
     <ClInclude Include="inc\calling.hpp" />
-    <ClInclude Include="inc\escape_tool.h" />
     <ClInclude Include="inc\framework.h" />
     <ClInclude Include="inc\injector.hpp" />
     <ClInclude Include="inc\mod_download.h" />
@@ -190,7 +189,6 @@ copy "$(TargetPath)" "C:\Program Files\Epic Games\EuropaUniversalis4\plugins"</C
   <ItemGroup>
     <ClCompile Include="src\byte_pattern.cpp" />
     <ClCompile Include="src\dll_main.cpp" />
-    <ClCompile Include="src\escape_tool.cpp" />
     <ClCompile Include="src\event_dialog.cpp" />
     <ClCompile Include="src\file_save.cpp" />
     <ClCompile Include="src\font.cpp" />

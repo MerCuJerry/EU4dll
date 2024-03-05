@@ -1,6 +1,5 @@
 ﻿#include "pch.h"
 #include "plugin_64.h"
-#include "escape_tool.h"
 
 // 1.28.3,1.29.3時点でSDLのversionは2.0.4 hg-10001:e12c38730512
 namespace Input {
@@ -10,7 +9,6 @@ namespace Input {
 
 		uintptr_t inputProc1ReturnAddress1;
 		uintptr_t inputProc1ReturnAddress2;
-		uintptr_t inputProc1CallAddress;
 		uintptr_t inputProc2ReturnAddress;
 	}
 
@@ -24,9 +22,7 @@ namespace Input {
 			if (BytePattern::temp_instance().has_size(1, u8"入力した文字をutf8からエスケープ列へ変換する１")) {
 				uintptr_t address = BytePattern::temp_instance().get_first().address();
 
-				inputProc1CallAddress = (uintptr_t)utf8ToEscapedStr3;
-
-				// mov     rax, [r13+0]
+				// mov     rax, [r13+0] eu4.7FF7740F6104
 				inputProc1ReturnAddress1 = address + 0x1E;
 
 				Injector::MakeJMP(address, inputProc1V130, true);
