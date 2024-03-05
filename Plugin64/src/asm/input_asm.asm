@@ -8,7 +8,6 @@ NOT_DEF			=	2026h
 .DATA
 	inputProc1Var1	DB		03,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
 	inputProc2Tmp	DQ		0
-	inputProc2Tmp2	DQ		0
 
 .CODE
 
@@ -85,7 +84,7 @@ inputProc1V130 ENDP
 ; rdi+30h : 文字列アドレス
 
 inputProc2 PROC
-	mov		inputProc2Tmp2,rsi; // カウンタとして使う
+	mov		inputProc2Tmp,rsi; // カウンタとして使う
 	xor		rsi,rsi; 
 
 	mov		rcx, qword ptr [rdi + 40h];
@@ -99,11 +98,11 @@ JMP_A:
 	sub		rax, 3;
 	js		JMP_C;
 	mov		al, byte ptr [rcx + rax];
-	cmp		al, 0Ch;
+	inc		rsi;
+	cmp		al, 0C0h;
 	jb		JMP_C;
-	cmp		al, 0Eh;
+	cmp		al, 0E0h;
 	jb		JMP_B;
-
 	inc		rsi;
 
 JMP_B:
@@ -121,13 +120,11 @@ JMP_D:
 	call	qword ptr [rax+138h];
 
 JMP_E:
-	cmp		rsi, 0;
-	jz      JMP_F;
 	dec		rsi;
-	jmp		JMP_C;
+	jnz		JMP_C;
 
 JMP_F:
-	mov		rsi,inputProc2Tmp2;
+	mov		rsi,inputProc2Tmp;
 
 	push	inputProc2ReturnAddress;
 	ret;
