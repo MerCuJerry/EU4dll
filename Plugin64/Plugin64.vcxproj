@@ -29,26 +29,26 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -94,6 +94,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\asm;$(ProjectDir)src;$(ProjectDir)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -101,7 +102,8 @@
       <EnableUAC>false</EnableUAC>
     </Link>
     <PostBuildEvent>
-      <Command>copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Europa Universalis IV\plugins"</Command>
+      <Command>copy "$(TargetPath)" "C:\Program Files (x86)\Steam\steamapps\common\Europa Universalis IV\plugins"
+copy "$(TargetPath)" "C:\Program Files\Epic Games\EuropaUniversalis4\plugins"</Command>
     </PostBuildEvent>
     <MASM>
       <MakeAllSymbolsPublic>
@@ -158,6 +160,7 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <AdditionalOptions>/source-charset:utf-8 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>$(ProjectDir)src\asm;$(ProjectDir)src;$(ProjectDir)inc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,82 +175,77 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="assembly.hpp" />
-    <ClInclude Include="byte_pattern.h" />
-    <ClInclude Include="calling.hpp" />
-    <ClInclude Include="escape_tool.h" />
-    <ClInclude Include="framework.h" />
-    <ClInclude Include="injector.hpp" />
-    <ClInclude Include="mod_download.h" />
-    <ClInclude Include="pch.h" />
-    <ClInclude Include="plugin_64.h" />
-    <ClInclude Include="translator.hpp" />
-    <ClInclude Include="utility.hpp" />
+    <ClInclude Include="inc\assembly.hpp" />
+    <ClInclude Include="inc\byte_pattern.h" />
+    <ClInclude Include="inc\calling.hpp" />
+    <ClInclude Include="inc\framework.h" />
+    <ClInclude Include="inc\injector.hpp" />
+    <ClInclude Include="inc\mod_download.h" />
+    <ClInclude Include="inc\pch.h" />
+    <ClInclude Include="inc\plugin_64.h" />
+    <ClInclude Include="inc\translator.hpp" />
+    <ClInclude Include="inc\utility.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="byte_pattern.cpp" />
-    <ClCompile Include="debug.cpp" />
-    <ClCompile Include="dll_main.cpp" />
-    <ClCompile Include="escape_tool.cpp" />
-    <ClCompile Include="event_dialog.cpp" />
-    <ClCompile Include="file_save.cpp" />
-    <ClCompile Include="font.cpp" />
-    <ClCompile Include="hooking.hpp" />
-    <ClCompile Include="ime.cpp" />
-    <ClCompile Include="input.cpp" />
-    <ClCompile Include="list_field_adjustment.cpp" />
-    <ClCompile Include="main_text.cpp" />
-    <ClCompile Include="map_adjustment.cpp" />
-    <ClCompile Include="map_justify.cpp" />
-    <ClCompile Include="map_nudge_view.cpp" />
-    <ClCompile Include="map_popup.cpp" />
-    <ClCompile Include="map_view.cpp" />
-    <ClCompile Include="mod_download.cpp" />
-    <ClCompile Include="options.cpp" />
-    <ClCompile Include="pch.cpp">
+    <ClCompile Include="src\byte_pattern.cpp" />
+    <ClCompile Include="src\dll_main.cpp" />
+    <ClCompile Include="src\event_dialog.cpp" />
+    <ClCompile Include="src\file_save.cpp" />
+    <ClCompile Include="src\font.cpp" />
+    <ClCompile Include="inc\hooking.hpp" />
+    <ClCompile Include="src\ime.cpp" />
+    <ClCompile Include="src\input.cpp" />
+    <ClCompile Include="src\list_field_adjustment.cpp" />
+    <ClCompile Include="src\main_text.cpp" />
+    <ClCompile Include="src\map_adjustment.cpp" />
+    <ClCompile Include="src\map_justify.cpp" />
+    <ClCompile Include="src\map_nudge_view.cpp" />
+    <ClCompile Include="src\map_popup.cpp" />
+    <ClCompile Include="src\map_view.cpp" />
+    <ClCompile Include="src\mod_download.cpp" />
+    <ClCompile Include="src\options.cpp" />
+    <ClCompile Include="src\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="date.cpp" />
-    <ClCompile Include="tooltip_and_button.cpp" />
-    <ClCompile Include="validator.cpp" />
-    <ClCompile Include="version.cpp" />
-    <ClCompile Include="localization.cpp" />
+    <ClCompile Include="src\date.cpp" />
+    <ClCompile Include="src\c_bitmap_font.cpp" />
+    <ClCompile Include="src\tooltip_and_button.cpp" />
+    <ClCompile Include="src\validator.cpp" />
+    <ClCompile Include="src\version.cpp" />
+    <ClCompile Include="src\localization.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <MASM Include="date_asm.asm" />
-    <MASM Include="debug_asm.asm">
-      <FileType>Document</FileType>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-      </ExcludedFromBuild>
-    </MASM>
-    <MASM Include="event_dialog_asm.asm" />
-    <MASM Include="file_save_asm.asm" />
-    <MASM Include="font_asm.asm" />
-    <MASM Include="ime_asm.asm" />
-    <MASM Include="input_asm.asm" />
-    <MASM Include="list_field_adjustment_asm.asm" />
-    <MASM Include="main_text_asm.asm" />
-    <MASM Include="map_adjustment_asm.asm" />
-    <MASM Include="map_justify_asm.asm" />
-    <MASM Include="map_nudge_view_asm.asm" />
-    <MASM Include="map_popup_asm.asm" />
-    <MASM Include="map_view_asm.asm" />
-    <MASM Include="tooltip_and_button_asm.asm" />
-    <MASM Include="localization_asm.asm" />
+    <MASM Include="src\asm\event_dialog_asm.asm" />
+    <MASM Include="src\asm\file_save_asm.asm" />
+    <MASM Include="src\asm\font_asm.asm" />
+    <MASM Include="src\asm\ime_asm.asm" />
+    <MASM Include="src\asm\input_asm.asm" />
+    <MASM Include="src\asm\list_field_adjustment_asm.asm" />
+    <MASM Include="src\asm\main_text_asm.asm" />
+    <MASM Include="src\asm\map_adjustment_asm.asm" />
+    <MASM Include="src\asm\map_justify_asm.asm" />
+    <MASM Include="src\asm\map_nudge_view_asm.asm" />
+    <MASM Include="src\asm\map_popup_asm.asm" />
+    <MASM Include="src\asm\map_view_asm.asm" />
+    <MASM Include="src\asm\c_bitmap_font_asm.asm" />
+    <MASM Include="src\asm\tooltip_and_button_asm.asm" />
+    <MASM Include="src\asm\localization_asm.asm" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
-    <Import Project="..\packages\boost.1.70.0.0\build\boost.targets" Condition="Exists('..\packages\boost.1.70.0.0\build\boost.targets')" />
     <Import Project="$(VCTargetsPath)\BuildCustomizations\masm.targets" />
+    <Import Project="..\packages\boost.1.84.0\build\boost.targets" Condition="Exists('..\packages\boost.1.84.0\build\boost.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
-      <ErrorText>このプロジェクトは、このコンピューター上にない NuGet パッケージを参照しています。それらのパッケージをダウンロードするには、[NuGet パッケージの復元] を使用します。詳細については、http://go.microsoft.com/fwlink/?LinkID=322105 を参照してください。見つからないファイルは {0} です。</ErrorText>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
     </PropertyGroup>
-    <Error Condition="!Exists('..\packages\boost.1.70.0.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.70.0.0\build\boost.targets'))" />
+    <Error Condition="!Exists('..\packages\boost.1.84.0\build\boost.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\boost.1.84.0\build\boost.targets'))" />
   </Target>
 </Project>

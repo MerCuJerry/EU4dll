@@ -6,7 +6,6 @@
 #include <filesystem>
 #include <ShlObj.h>
 #include <Objbase.h>
-#include "auto_update.h"
 
 using namespace std;
 using namespace std::filesystem;
@@ -52,6 +51,23 @@ extern "C" {
 			VerQueryValueW = GetProcAddress(module, "VerQueryValueW");
 		}
 	} version;
+	void _GetFileVersionInfoA() { version.GetFileVersionInfoA(); }
+    void _GetFileVersionInfoByHandle() { version.GetFileVersionInfoByHandle(); }
+    void _GetFileVersionInfoExA() { version.GetFileVersionInfoExA(); }
+    void _GetFileVersionInfoExW() { version.GetFileVersionInfoExW(); }
+    void _GetFileVersionInfoSizeA() { version.GetFileVersionInfoSizeA(); }
+    void _GetFileVersionInfoSizeExA() { version.GetFileVersionInfoSizeExA(); }
+    void _GetFileVersionInfoSizeExW() { version.GetFileVersionInfoSizeExW(); }
+    void _GetFileVersionInfoSizeW() { version.GetFileVersionInfoSizeW(); }
+    void _GetFileVersionInfoW() { version.GetFileVersionInfoW(); }
+    void _VerFindFileA() { version.VerFindFileA(); }
+    void _VerFindFileW() { version.VerFindFileW(); }
+    void _VerInstallFileA() { version.VerInstallFileA(); }
+    void _VerInstallFileW() { version.VerInstallFileW(); }
+    void _VerLanguageNameA() { version.VerLanguageNameA(); }
+    void _VerLanguageNameW() { version.VerLanguageNameW(); }
+    void _VerQueryValueA() { version.VerQueryValueA(); }
+    void _VerQueryValueW() { version.VerQueryValueW(); }
 }
 
 void initInjector()
@@ -119,12 +135,6 @@ void Initialize(HMODULE hSelf)
 	GetModuleFileNameW(hSelf, pluginpath, MAX_PATH);
 
 	const path pluginsPath = path{ pluginpath }.parent_path() / L"plugins";
-
-	#ifndef _DEBUG
-	if (!InitAutoUpdate(pluginsPath)) {
-		//　アラートを出すのみで終了はしないことにした
-	}
-	#endif // DEBUG時は自動更新しない
 
 	initInjector();
 
