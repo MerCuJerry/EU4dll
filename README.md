@@ -8,8 +8,7 @@ This dll makes it possible to display double-byte characters on Europa Universal
 - Windows is supported and dll only works on Steam.
 - macOS is not supported. I don't have those plans.
 - Linux is not supported.
-- Displaying very long tooltips can cause **CTD**. See [here](https://github.com/matanki-saito/EU4dll/issues/226).
-- Its still WIP, some feature like typing UTF-8 character will crash your game!!
+- Its still WIP, will crash your game!!
 
 ## How to use
 
@@ -80,4 +79,5 @@ MIT Licence
 This dll was forked by the following project. Thank you so much.
 
 [EU4CHS](https://bitbucket.org/kelashi/eu4chs/src/master/)
+
 [EU4JPS](https://github.com/matanki-saito/EU4dll)
