@@ -7,7 +7,7 @@ namespace Input {
 		void inputProc1V130();
 		void inputProc2();
 
-		uintptr_t inputProc1ReturnAddress1;
+		uintptr_t originalinputProcAddress;
 		uintptr_t inputProc1ReturnAddress2;
 		uintptr_t inputProc2ReturnAddress;
 	}
@@ -23,7 +23,7 @@ namespace Input {
 				uintptr_t address = BytePattern::temp_instance().get_first().address();
 
 				// mov     rax, [r13+0] eu4.7FF7740F6104
-				inputProc1ReturnAddress1 = address + 0x1E;
+				originalinputProcAddress = address + 0x1E;
 
 				Injector::MakeJMP(address, inputProc1V130, true);
 			}
