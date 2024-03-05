@@ -6,10 +6,13 @@ namespace Input {
 	extern "C" {
 		void inputProc1V130();
 		void inputProc2();
+		void KeyPadLeftProc();
 
 		uintptr_t originalinputProcAddress;
 		uintptr_t inputProc1ReturnAddress2;
 		uintptr_t inputProc2ReturnAddress;
+		uintptr_t KeyPadLeftReturnAddress;
+		uintptr_t CursorAtZeroReturnAddress;
 	}
 
 	DllError inputProc1Injector(RunOptions options) {
@@ -74,11 +77,39 @@ namespace Input {
 		return e;
 	}
 
+	DllError KeyPadLeftProcInjector(RunOptions options) {
+		DllError e = {};
+
+		switch (options.version) {
+		case v1_36_0_0:
+			//push 	rdi
+			BytePattern::temp_instance().find_pattern("40 57 48 83 EC 40 0F B7 41 54 48 8B F9 66 85 C0");
+			if (BytePattern::temp_instance().has_size(1, u8"keypadleft")) {
+				uintptr_t address = BytePattern::temp_instance().get_first().address();
+
+				// movzx   r8d, word ptr [rdi+56h]
+				KeyPadLeftReturnAddress = address + 0x15;
+				CursorAtZeroReturnAddress = address + 0x1E;
+
+				Injector::MakeJMP(address, KeyPadLeftProc, true);
+			}
+			else {
+				e.input.unmatchdKeyPadLeftProcInjector = true;
+			}
+			break;
+		default:
+			e.input.versionKeyPadLeftProcInjector = true;
+		}
+
+		return e;
+	}
+
 	DllError Init(RunOptions options) {
 		DllError result = {};
 
 		result |= inputProc1Injector(options);
 		result |= inputProc2Injector(options);
+		result |= KeyPadLeftProcInjector(options);
 
 		return result;
 	}

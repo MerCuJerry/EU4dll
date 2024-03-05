@@ -1,6 +1,8 @@
 EXTERN	originalinputProcAddress	:	QWORD
 EXTERN	inputProc1ReturnAddress2	:	QWORD
 EXTERN	inputProc2ReturnAddress		:	QWORD
+EXTERN	KeyPadLeftReturnAddress		:	QWORD
+EXTERN	CursorAtZeroReturnAddress	:	QWORD
 
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
@@ -77,7 +79,7 @@ inputProc1V130 ENDP
 
 ;-------------------------------------------;
 
-; seems working well, not change
+; need fix, if u backspace in middle of the text it will only delete one byte
 ; 下記はqword ptr [rax+138h];の関数（40 57 48 83 EC 20 48 8B 01 48 8B F9 48 8B 90 68 01 00 00）から割り出した
 ; rdi+54h : キャレット位置
 ; rdi+40h : 文字列長さ
@@ -95,17 +97,14 @@ inputProc2 PROC
 	
 JMP_A:
 	movsxd	rax, dword ptr [rdi + 54h];
-	sub		rax, 3;
-	js		JMP_C;
-	mov		al, byte ptr [rcx + rax];
 	inc		rsi;
-	cmp		al, 0C0h;
+	cmp		rax, 3;
 	jb		JMP_C;
-	cmp		al, 0E0h;
-	jb		JMP_B;
+	cmp		byte ptr [rcx + rax - 2], 80h;
+	jb		JMP_C;
 	inc		rsi;
-
-JMP_B:
+	cmp		byte ptr [rcx + rax - 3], 0E0h;
+	jb		JMP_C;
 	inc		rsi;
 
 JMP_C:
@@ -129,4 +128,34 @@ JMP_F:
 	push	inputProc2ReturnAddress;
 	ret;
 inputProc2 ENDP
+
+;-------------------------------------------;
+
+KeyPadLeftProc PROC
+	push 	rdi;
+	sub 	rsp, 40h
+	movzx	rax, word ptr [rcx + 54h]
+	mov 	rdi, rcx
+	test 	ax, ax
+	jz		JMP_A;
+	
+	dec		ax;
+	jz		JMP_B; prevent ax below 0
+	cmp		byte ptr[rax + rcx + 30h - 1], 80h;
+	jb		JMP_B;
+	dec		ax;
+	jz		JMP_B;
+	cmp		byte ptr[rax + rcx + 30h - 1], 0E0h;
+	jb		JMP_B;
+	dec		ax;
+
+JMP_B:
+	push	KeyPadLeftReturnAddress;
+	ret;
+
+JMP_A:
+	push	CursorAtZeroReturnAddress;
+	ret;
+
+KeyPadLeftProc ENDP
 END
