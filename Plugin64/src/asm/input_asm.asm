@@ -3,6 +3,8 @@ EXTERN	inputProc1ReturnAddress2	:	QWORD
 EXTERN	inputProc2ReturnAddress		:	QWORD
 EXTERN	KeyPadLeftReturnAddress		:	QWORD
 EXTERN	CursorAtZeroReturnAddress	:	QWORD
+EXTERN 	KeyPadRightReturnAddress	:	QWORD
+EXTERN  KeyPadRightProcCallAddress	:	QWORD
 
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
@@ -10,7 +12,7 @@ NOT_DEF			=	2026h
 .DATA
 	inputProc1Var1	DB		03,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
 	inputProc2Tmp	DQ		0
-
+	deleteProcFlag	DB		00
 .CODE
 
 inputProc1V130 PROC
@@ -79,7 +81,6 @@ inputProc1V130 ENDP
 
 ;-------------------------------------------;
 
-; need fix, if u backspace in middle of the text it will only delete one byte
 ; 下記はqword ptr [rax+138h];の関数（40 57 48 83 EC 20 48 8B 01 48 8B F9 48 8B 90 68 01 00 00）から割り出した
 ; rdi+54h : キャレット位置
 ; rdi+40h : 文字列長さ
@@ -108,6 +109,7 @@ JMP_A:
 	inc		rsi;
 
 JMP_C:
+	mov		deleteProcFlag, 1;
 	mov		rax, qword ptr [rdi];
 	mov		rcx, rdi;
 	test	ebx, ebx;
@@ -131,6 +133,7 @@ inputProc2 ENDP
 
 ;-------------------------------------------;
 
+; this proc is using by deleteproc
 KeyPadLeftProc PROC
 	push 	rdi;
 	sub 	rsp, 40h
@@ -141,6 +144,8 @@ KeyPadLeftProc PROC
 	
 	dec		ax;
 	jz		JMP_B; prevent ax below 0
+	cmp		deleteProcFlag, 1;tmp fix working well smt
+	jz		JMP_C;
 	cmp		byte ptr[rax + rcx + 30h - 1], 80h;
 	jb		JMP_B;
 	dec		ax;
@@ -153,9 +158,33 @@ JMP_B:
 	push	KeyPadLeftReturnAddress;
 	ret;
 
+JMP_C:
+	mov		deleteProcFlag, 0;
+	jmp 	JMP_B
+
 JMP_A:
 	push	CursorAtZeroReturnAddress;
 	ret;
 
 KeyPadLeftProc ENDP
+
+;-------------------------------------------;
+
+KeyPadRightProc PROC
+	mov		rcx, rdi;
+	lea		rdx,[rax + 1];
+	cmp		byte ptr[rdi + 30h], 0C0h
+	jb		JMP_A;
+	inc		rdx;
+	cmp		byte ptr[rdi + 30h], 0E0h
+	jb		JMP_A;
+	inc		rdx;
+
+JMP_A:
+	call	KeyPadRightProcCallAddress
+	movzx	eax, word ptr[rdi + 54h]
+	push	KeyPadRightReturnAddress
+	ret
+
+KeyPadRightProc ENDP
 END
