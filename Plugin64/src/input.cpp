@@ -6,10 +6,16 @@ namespace Input {
 	extern "C" {
 		void inputProc1V130();
 		void inputProc2();
+		void KeyPadLeftProc();
+		void KeyPadRightProc();
 
 		uintptr_t originalinputProcAddress;
 		uintptr_t inputProc1ReturnAddress2;
 		uintptr_t inputProc2ReturnAddress;
+		uintptr_t KeyPadLeftReturnAddress;
+		uintptr_t CursorAtZeroReturnAddress;
+		uintptr_t KeyPadRightReturnAddress;
+		uintptr_t KeyPadRightProcCallAddress;
 	}
 
 	DllError inputProc1Injector(RunOptions options) {
@@ -73,12 +79,54 @@ namespace Input {
 
 		return e;
 	}
+	DllError KeyPadProcInjector(RunOptions options) {
+		DllError e = {};
+
+		switch (options.version) {
+		case v1_36_0_0:
+			//push 	rdi
+			BytePattern::temp_instance().find_pattern("40 57 48 83 EC 40 0F B7 41 54 48 8B F9 66 85 C0");
+			if (BytePattern::temp_instance().has_size(1, u8"keypadleft")) {
+				uintptr_t address = BytePattern::temp_instance().get_first().address();
+
+				// movzx   r8d, word ptr [rdi+56h]
+				KeyPadLeftReturnAddress = address + 0x15;
+				CursorAtZeroReturnAddress = address + 0x1E;
+
+				Injector::MakeJMP(address, KeyPadLeftProc, true);
+			}
+			else {
+				e.input.unmatchdKeyPadLeftProcInjector = true;
+			}
+			BytePattern::temp_instance().find_pattern("48 8B C4 55 48 8D 68 A1 48 81 EC 90 00 00 00 48 C7 45 E7 FE FF FF FF 48 89 58 08 48 89 78 18 48 8B F9");
+			if (BytePattern::temp_instance().has_size(1, u8"keypadrightcall")) {
+				KeyPadRightProcCallAddress = BytePattern::temp_instance().get_first().address();
+			}
+			//mov rcx,rdi
+			BytePattern::temp_instance().find_pattern("48 8B CF 8D 50 01 E8 6C ED FF FF 0F B7 47 54 89 47 50");
+			if (BytePattern::temp_instance().has_size(1, u8"keypadright")) {
+				uintptr_t address = BytePattern::temp_instance().get_first().address();
+				// movzx eax,word ptr ds:[rdi+54]
+				KeyPadRightReturnAddress = address + 0x0F;
+				Injector::MakeJMP(address, KeyPadRightProc, true);
+			}
+			else {
+				e.input.unmatchdKeyPadLeftProcInjector = true;
+			}
+			break;
+		default:
+			e.input.versionKeyPadLeftProcInjector = true;
+		}
+
+		return e;
+	}
 
 	DllError Init(RunOptions options) {
 		DllError result = {};
 
 		result |= inputProc1Injector(options);
 		result |= inputProc2Injector(options);
+		result |= KeyPadProcInjector(options);
 
 		return result;
 	}

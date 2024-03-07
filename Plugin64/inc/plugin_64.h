@@ -189,13 +189,17 @@ struct DllError{
 			bool versionInputProc1Injector : 1;
 			bool unmatchdInputProc2Injector : 1;
 			bool versionInputProc2Injector : 1;
+			bool unmatchdKeyPadLeftProcInjector : 1;
+			bool versionKeyPadLeftProcInjector : 1;
 		};
 
 		std::string print() {
 			return PL(unmatchdInputProc1Injector)
 				+ PL(versionInputProc1Injector)
 				+ PL(unmatchdInputProc2Injector)
-				+ PL(versionInputProc2Injector);
+				+ PL(versionInputProc2Injector)
+				+ PL(unmatchdKeyPadLeftProcInjector)
+				+ PL(versionKeyPadLeftProcInjector);
 		}
 
 	} input;

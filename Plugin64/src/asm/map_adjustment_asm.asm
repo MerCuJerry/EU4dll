@@ -18,8 +18,12 @@ DefaultSeparator	DB	" ", 0
 .CODE
 mapAdjustmentProc1 PROC
 	movsx	ecx, byte ptr[rdi + rbx];
-	cmp		ecx, 0C0h;
-	jb		JMP_D;
+	cmp		ecx, 0C2h;
+	jbe		JMP_D;
+	cmp		byte ptr[rdi + rbx + 1], 80h
+	jb		JMP_D
+	cmp		byte ptr[rdi + rbx + 1], 0BFh
+	ja		JMP_D
 	cmp		ecx, 0E0h;
 	jb		JMP_A;
 
@@ -49,10 +53,12 @@ mapAdjustmentProc1 ENDP
 ;-------------------------------------------;
 
 mapAdjustmentProc2V130 PROC
-	cmp		al, 0C0h;
-	jb		JMP_D;
+	cmp		al, 0C2h;
+	jbe		JMP_D;
+	mov		r8, 2;
 	cmp		al, 0E0h;
-	jb		JMP_A;
+	jb		JMP_E;
+	inc		r8
 	jmp		JMP_E;
 
 JMP_D:
@@ -66,11 +72,7 @@ JMP_B:
 	jnz		JMP_B;
 	jmp		JMP_C;
 
-JMP_A:
-	mov		r8, 2;
 JMP_E:
-	mov		r8, 3;
-
 	lea     rax, qword ptr [rbp + 200h - 160h];
 	cmp     qword ptr [rbp + 200h - 148h], 10h;
 	cmovnb  rax, qword ptr [rbp + 200h - 160h];
@@ -111,7 +113,14 @@ mapAdjustmentProc4V130 PROC
 	cmovnb	rax, r9;
 
 	cmp     byte ptr[rax + rcx], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rcx + 1], 80h
+	jb		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rcx + 1], 0BFh
+	ja		JMP_NOTUTF8;
+	jmp		JMP_A
+
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + rcx];
 	jmp 	JMP_E;
 
@@ -138,7 +147,8 @@ JMP_B:
 	pop 	rdx;
 	cmp		rcx, MAP_LIMIT;
 	ja		JMP_G;
-
+	test	ah, ah;
+	jz		JMP_E
 	cmp		eax, NO_FONT;
 	ja		JMP_E;
 JMP_G:

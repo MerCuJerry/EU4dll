@@ -17,7 +17,14 @@ listFieldAdjustmentProc1_v1315 PROC
 	movss	xmm6, dword ptr [rcx + 848h];
 
 	cmp     byte ptr[r12 + rax], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_NOTUTF8;
+	cmp		byte ptr [r12 + rax + 1], 80h
+	jb		JMP_NOTUTF8;
+	cmp		byte ptr [r12 + rax + 1], 0BFh
+	ja		JMP_NOTUTF8;
+	jmp		JMP_A
+
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[r12 + rax];
 	mov		listFieldAdjustmentProc1MultibyteFlag, 0;
 	jmp 	JMP_G;
@@ -44,6 +51,8 @@ JMP_B:
 	movzx	eax, dx;
 	pop 	rdx;
 	mov		listFieldAdjustmentProc1MultibyteFlag, 1;
+	test	ah, ah;
+	jz		JMP_G
 	cmp		eax, NO_FONT;
 	ja		JMP_G;
 	mov		eax, NOT_DEF;

@@ -17,7 +17,14 @@ mainTextProc1 PROC
 	movsxd	rax, edi;
 
 	cmp     byte ptr[rax + rbx], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rbx + 1], 80h
+	jb		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rbx + 1], 0BFh
+	ja		JMP_NOTUTF8;
+	jmp		JMP_A
+
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + rbx];
 	jmp 	JMP_E;
 
@@ -42,6 +49,8 @@ JMP_B:
 
 JMP_C:
 	movzx 	eax, ax;
+	test	ah, ah;
+	jz		JMP_E
 	cmp		ax, NO_FONT;
 
 	ja		JMP_E;
@@ -78,8 +87,12 @@ mainTextProc2_v131 PROC
 	inc     r14d;
 	inc		rcx;
 
-	cmp 	al, 0C0h;
+	cmp 	al, 0C2h;
+	jbe		JMP_A;
+	cmp		byte ptr [rdx + r10 + 1], 80h
 	jb		JMP_A;
+	cmp		byte ptr [rdx + r10 + 1], 0BFh
+	ja		JMP_A;
 	mov 	edi, eax;
 	and		edi, 1Fh;
 	cmp		al, 0E0h;

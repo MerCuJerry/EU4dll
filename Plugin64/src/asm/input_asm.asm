@@ -1,6 +1,10 @@
 EXTERN	originalinputProcAddress	:	QWORD
 EXTERN	inputProc1ReturnAddress2	:	QWORD
 EXTERN	inputProc2ReturnAddress		:	QWORD
+EXTERN	KeyPadLeftReturnAddress		:	QWORD
+EXTERN	CursorAtZeroReturnAddress	:	QWORD
+EXTERN 	KeyPadRightReturnAddress	:	QWORD
+EXTERN  KeyPadRightProcCallAddress	:	QWORD
 
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
@@ -8,8 +12,7 @@ NOT_DEF			=	2026h
 .DATA
 	inputProc1Var1	DB		03,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
 	inputProc2Tmp	DQ		0
-	inputProc2Tmp2	DQ		0
-
+	deleteProcFlag	DB		00
 .CODE
 
 inputProc1V130 PROC
@@ -78,14 +81,13 @@ inputProc1V130 ENDP
 
 ;-------------------------------------------;
 
-; seems working well, not change
 ; 下記はqword ptr [rax+138h];の関数（40 57 48 83 EC 20 48 8B 01 48 8B F9 48 8B 90 68 01 00 00）から割り出した
 ; rdi+54h : キャレット位置
 ; rdi+40h : 文字列長さ
 ; rdi+30h : 文字列アドレス
 
 inputProc2 PROC
-	mov		inputProc2Tmp2,rsi; // カウンタとして使う
+	mov		inputProc2Tmp,rsi; // カウンタとして使う
 	xor		rsi,rsi; 
 
 	mov		rcx, qword ptr [rdi + 40h];
@@ -96,20 +98,18 @@ inputProc2 PROC
 	
 JMP_A:
 	movsxd	rax, dword ptr [rdi + 54h];
-	sub		rax, 3;
-	js		JMP_C;
-	mov		al, byte ptr [rcx + rax];
-	cmp		al, 0Ch;
-	jb		JMP_C;
-	cmp		al, 0Eh;
-	jb		JMP_B;
-
 	inc		rsi;
-
-JMP_B:
+	cmp		rax, 3;
+	jb		JMP_C;
+	cmp		byte ptr [rcx + rax - 2], 80h;
+	jb		JMP_C;
+	inc		rsi;
+	cmp		byte ptr [rcx + rax - 3], 0E0h;
+	jb		JMP_C;
 	inc		rsi;
 
 JMP_C:
+	mov		deleteProcFlag, 1;
 	mov		rax, qword ptr [rdi];
 	mov		rcx, rdi;
 	test	ebx, ebx;
@@ -121,15 +121,70 @@ JMP_D:
 	call	qword ptr [rax+138h];
 
 JMP_E:
-	cmp		rsi, 0;
-	jz      JMP_F;
 	dec		rsi;
-	jmp		JMP_C;
+	jnz		JMP_C;
 
 JMP_F:
-	mov		rsi,inputProc2Tmp2;
+	mov		rsi,inputProc2Tmp;
 
 	push	inputProc2ReturnAddress;
 	ret;
 inputProc2 ENDP
+
+;-------------------------------------------;
+
+; this proc is using by deleteproc
+KeyPadLeftProc PROC
+	push 	rdi;
+	sub 	rsp, 40h
+	movzx	rax, word ptr [rcx + 54h]
+	mov 	rdi, rcx
+	test 	ax, ax
+	jz		JMP_A;
+	
+	dec		ax;
+	jz		JMP_B; prevent ax below 0
+	cmp		deleteProcFlag, 1;tmp fix working well smt
+	jz		JMP_C;
+	cmp		byte ptr[rax + rcx + 30h - 1], 80h;
+	jb		JMP_B;
+	dec		ax;
+	jz		JMP_B;
+	cmp		byte ptr[rax + rcx + 30h - 1], 0E0h;
+	jb		JMP_B;
+	dec		ax;
+
+JMP_B:
+	push	KeyPadLeftReturnAddress;
+	ret;
+
+JMP_C:
+	mov		deleteProcFlag, 0;
+	jmp 	JMP_B
+
+JMP_A:
+	push	CursorAtZeroReturnAddress;
+	ret;
+
+KeyPadLeftProc ENDP
+
+;-------------------------------------------;
+
+KeyPadRightProc PROC
+	mov		rcx, rdi;
+	lea		rdx,[rax + 1];
+	cmp		byte ptr[rdi + 30h], 0C0h
+	jb		JMP_A;
+	inc		rdx;
+	cmp		byte ptr[rdi + 30h], 0E0h
+	jb		JMP_A;
+	inc		rdx;
+
+JMP_A:
+	call	KeyPadRightProcCallAddress
+	movzx	eax, word ptr[rdi + 54h]
+	push	KeyPadRightReturnAddress
+	ret
+
+KeyPadRightProc ENDP
 END

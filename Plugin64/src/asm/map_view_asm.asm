@@ -14,7 +14,14 @@ NOT_DEF			=	2026h
 .CODE
 mapViewProc1 PROC
 	cmp     byte ptr[rax + r8], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rax + r8 + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rax + r8 + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 	movzx   eax, byte ptr[rax + r8];
 	jmp 	JMP_G;
 
@@ -41,6 +48,8 @@ JMP_B:
 
 	movzx	eax, dx; 	
 	pop 	rdx;
+	test	ah, ah;
+	jz		JMP_G
 	cmp		eax, NO_FONT;
 	ja		JMP_G;
 	mov		eax, NOT_DEF;
@@ -74,7 +83,14 @@ mapViewProc2V130 PROC
 	lea     r9, [r12 + 120h];
 
 	cmp     byte ptr[rax + r15], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rax + r15 + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rax + r15 + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 	movzx   eax, byte ptr[rax + r15];
 	jmp 	JMP_E;
 
@@ -101,6 +117,8 @@ JMP_B:
 
 	movzx	eax, dx; 	
 	pop 	rdx;
+	test	ah, ah;
+	jz		JMP_E
 	cmp		eax, NO_FONT;
 	ja		JMP_E;
 	mov		eax, NOT_DEF;
@@ -118,7 +136,14 @@ mapViewProc3 PROC
     mov		qword ptr[rsp + 488h - 448h],0;
 
 	cmp		byte ptr [rax + r15], 0C2h;
-	ja		JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rax + r15 + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rax + r15 + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 
 	movzx	r8d, byte ptr[rax + r15];
 	mov     edx, 1;

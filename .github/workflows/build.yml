@@ -21,7 +21,7 @@ jobs:
       id: cache
       with:
         path: ~/.nuget/packages
-        key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+        key: ${{ runner.os }}-nuget-${{ hashFiles('Plugin64/packages.config') }}
     - name: Restore nuget db
       if: steps.cache.outputs.cache-hit != 'true'  
       run: nuget restore EU4JPS.sln

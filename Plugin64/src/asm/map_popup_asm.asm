@@ -14,7 +14,14 @@ NOT_DEF			=	2026h
 .CODE
 mapPopupProc1 PROC
 	cmp		byte ptr[rdi + rax], 0C2h;
-	jb		JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rdi + rax + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rdi + rax + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 
 	movzx	r8d, byte ptr [rdi + rax];
 	mov     edx, 1;
@@ -43,7 +50,14 @@ mapPopupProc1 ENDP
 
 mapPopupProc2V130 PROC
 	cmp     byte ptr[rax + rdi], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rax + rdi + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rax + rdi + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 	movzx   eax, byte ptr[rax + rdi];
 	jmp 	JMP_H;
 
@@ -68,6 +82,8 @@ JMP_B:
 
 	movzx	eax, dx; 	
 	pop 	rdx;
+	test	ah, ah;
+	jz		JMP_H
 	cmp		eax, NO_FONT;
 	ja		JMP_H;
 	mov		eax, NOT_DEF;
@@ -84,7 +100,14 @@ mapPopupProc2V130 ENDP
 
 mapPopupProc3V130 PROC
 	cmp     byte ptr[rax + rbx], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rax + rbx + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rax + rbx + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 	movzx   eax, byte ptr[rax + rbx];
 	jmp 	JMP_H;
 
@@ -109,6 +132,8 @@ JMP_B:
 
 	movzx	eax, dx; 	
 	pop 	rdx;
+	test	ah, ah;
+	jz		JMP_H
 	cmp		eax, NO_FONT;
 	ja		JMP_H;
 	mov		eax, NOT_DEF;

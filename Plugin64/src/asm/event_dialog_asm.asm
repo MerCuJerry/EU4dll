@@ -13,7 +13,14 @@ NOT_DEF			=	2026h
 .CODE
 eventDialogProc1V132 PROC
 	cmp     byte ptr[rax + rdx], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rdx + 1], 80h
+	jb		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rdx + 1], 0BFh
+	ja		JMP_NOTUTF8;
+	jmp		JMP_A
+
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + rdx];
 	mov		eventDialogProc1Flag, 0;
 	jmp 	JMP_E;
@@ -42,6 +49,8 @@ JMP_B:
 	mov		rdx, rdi;
 	pop 	rdi;
 	mov		eventDialogProc1Flag, 1;
+	test	ah, ah;
+	jz		JMP_E
 	cmp		eax, NO_FONT;
 	ja		JMP_E;
 	mov		eax, NOT_DEF;

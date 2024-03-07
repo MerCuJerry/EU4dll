@@ -9,7 +9,14 @@ NOT_DEF			=	2026h
 cBitmapFontProc1 PROC
 	;movzx   eax, byte ptr [rdi+rax]
 	cmp     byte ptr[rax + rdi], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rdi + 1], 80h
+	jb		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rdi + 1], 0BFh
+	ja		JMP_NOTUTF8;
+	jmp		JMP_A
+
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + rdi];
 	jmp 	JMP_H;
 
@@ -34,8 +41,9 @@ JMP_B:
 
 	movzx	eax, dx; 	
 	pop 	rdx;
+	test	ah, ah;
+	jz		JMP_G
 	cmp		ax, NO_FONT;
-
 	ja		JMP_G;
 	mov		ax, NOT_DEF;
 
@@ -57,7 +65,14 @@ cBitmapFontProc2 PROC
 	movss   xmm6, dword ptr [r12+848h];
 
 	cmp     byte ptr[rax + r13], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_NOTUTF8;
+	cmp		byte ptr [rax + r13 + 1], 80h
+	jb		JMP_NOTUTF8;
+	cmp		byte ptr [rax + r13 + 1], 0BFh
+	ja		JMP_NOTUTF8;
+	jmp		JMP_A
+
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + r13];
 	jmp 	JMP_H;
 
@@ -82,6 +97,8 @@ JMP_B:
 
 	movzx	eax, dx; 	
 	pop 	rdx;
+	test	ah, ah;
+	jz		JMP_H
 	cmp		ax, NO_FONT;
 
 	ja		JMP_H;

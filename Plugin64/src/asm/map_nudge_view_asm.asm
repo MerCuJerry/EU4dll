@@ -7,7 +7,14 @@ MAP_LIMIT		=	2Dh-1
 .CODE
 mapNudgeViewProc1V136 PROC
 	cmp     byte ptr[rax + rcx], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rcx + 1], 80h
+	jb		JMP_NOTUTF8;
+	cmp		byte ptr [rax + rcx + 1], 0BFh
+	ja		JMP_NOTUTF8;
+	jmp		JMP_A
+
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + rcx];
 	jmp 	JMP_F;
 
@@ -32,6 +39,8 @@ JMP_B:
 
 	movzx	eax, dx; 	
 	pop 	rdx;
+	test	ah, ah;
+	jz		JMP_F
 	cmp		eax, NO_FONT;
 	ja		JMP_F;
 	mov		eax, NOT_DEF;
