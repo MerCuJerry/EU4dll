@@ -8,7 +8,7 @@ This dll makes it possible to display double-byte characters on Europa Universal
 - Windows is supported and dll only works on Steam.
 - macOS is not supported. I don't have those plans.
 - Linux is not supported.
-- Its still WIP, will crash your game!!
+- Its still WIP, may crash your game!!
 
 ## How to use
 

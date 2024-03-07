@@ -26,8 +26,14 @@ NOT_DEF			=	2026h
 .CODE
 tooltipAndButtonProc1V133 PROC
 	cmp		byte ptr [rax + rcx], 0C2h
-	ja		JMP_A;
-	
+	jbe		JMP_C;
+	cmp		byte ptr [rax + rcx + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rax + rcx + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 	movzx	r8d, byte ptr[rax + rcx];
 	mov     edx, 1;
 	lea     rcx, qword ptr [rsp + 22D0h - 2258h];
@@ -63,7 +69,14 @@ tooltipAndButtonProc2V133 PROC
 	mov		edx, ebx;
 
 	cmp     byte ptr[rax + rdx], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rax + rdx + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rax + rdx + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 	movzx   eax, byte ptr[rax + rdx];
 	jmp 	JMP_G;
 
@@ -92,7 +105,8 @@ JMP_B:
 	pop 	rdi;
 	add		edx,2;
 	;mov		dword ptr [rbp+6E0h- 6C0h], ebx;
-
+	test	ah, ah;
+	jz		JMP_G
 	cmp		eax, NO_FONT;
 	ja		JMP_G;
 	mov		eax, NOT_DEF;
@@ -114,7 +128,14 @@ tooltipAndButtonProc3 PROC
 	movss   xmm10, dword ptr [r15 + 848h];
 
 	cmp     byte ptr[rax + rcx], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rax + rcx + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rax + rcx + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 	movzx   eax, byte ptr[rax + rcx];
 	jmp 	JMP_G;
 
@@ -142,6 +163,8 @@ JMP_B:
 
 JMP_F:
 	add		ebx, 2;
+	test	ah, ah;
+	jz		JMP_G
 	cmp		eax, NO_FONT;
 	ja		JMP_G;
 	mov		eax, NOT_DEF;
@@ -179,7 +202,14 @@ tooltipAndButtonProc5V130 PROC
 	lea     rcx, qword ptr [r12 + 120h];
 
 	cmp     byte ptr[rbx + r14], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_C;
+	cmp		byte ptr [rbx + r14 + 1], 80h
+	jb		JMP_C;
+	cmp		byte ptr [rbx + r14 + 1], 0BFh
+	ja		JMP_C;
+	jmp		JMP_A
+
+JMP_C:
 	movzx   edx, byte ptr[rbx + r14];
 	jmp 	JMP_G;
 
@@ -203,6 +233,8 @@ JMP_B:
 
 JMP_F:
 	movzx	edx, dx;
+	test	dh, dh;
+	jz		JMP_H
 	cmp		edx, NO_FONT;
 	ja		JMP_H;
 	mov		edx, NOT_DEF;

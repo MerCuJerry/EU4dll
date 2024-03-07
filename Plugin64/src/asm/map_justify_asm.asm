@@ -23,7 +23,14 @@ mapJustifyProc1 PROC
 	mov		debug, rax;
 
 	cmp     byte ptr[rax + r13], 0C2h;
-	ja      JMP_A;
+	jbe		JMP_NOTUTF8;
+	cmp		byte ptr [rax + r13 + 1], 80h
+	jb		JMP_NOTUTF8;
+	cmp		byte ptr [rax + r13 + 1], 0BFh
+	ja		JMP_NOTUTF8;
+	jmp		JMP_A
+
+JMP_NOTUTF8:
 	movzx   esi, byte ptr[rax + r13];
 	jmp 	JMP_K;
 
@@ -55,6 +62,8 @@ JMP_B:
 	ja		JMP_H;
 
 	movzx	esi, si;
+	test	si, 0FF00h;
+	jz		JMP_G
 	cmp		esi, NO_FONT;
 	ja		JMP_G;
 JMP_H:
