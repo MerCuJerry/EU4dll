@@ -153,10 +153,8 @@ JMP_B:
 	ja		JMP_E;
 JMP_G:
 	mov		eax, NOT_DEF;
-	movzx	eax, ax;
 
 JMP_E:
-
 	push	mapAdjustmentProc4ReturnAddress;
 	ret;
 mapAdjustmentProc4V130 ENDP
@@ -164,7 +162,7 @@ mapAdjustmentProc4V130 ENDP
 ;-------------------------------------------;
 
 mapAdjustmentProc5 PROC
-	; ex) {�A���S��}�̃V�`���A ; {} = [rbp+190h-118h
+	; ex) {アラゴン}領シチリア ; {} = [rbp+190h-118h
 	lea     rdx, [rbp+190h-118h];
 	movsxd	rcx,dword ptr [rdx+10h];
 	cmp		rcx , 10h;
@@ -172,8 +170,8 @@ mapAdjustmentProc5 PROC
 	mov		rdx, qword ptr [rdx];
 
 JMP_A:
-	; {}�̍Ō�̕������}���`�o�C�g�ł��邩���m�F����
-	; ��납��3�o�C�g�ڂ��擾����B2�o�C�g�ȉ��Ȃ�΃X�L�b�v
+	; {}の最後の文字がマルチバイトであるかを確認する
+	; 後ろから3バイト目を取得する。2バイト以下ならばスキップ
 	cmp		rcx,3;
 	jb		JMP_B;
 
@@ -185,12 +183,12 @@ JMP_A:
 	mov		r8,	mapAdjustmentProc5SeparatorAddress;
 	jmp		JMP_C;
 
-JMP_B: ;�p��
+JMP_B: ;英語
 	lea		r8,	DefaultSeparator;
 
 JMP_C:
-	lea     rcx, [rbp+190h-50h]; ���ɖ߂�
-	lea     rdx, [rbp+190h-118h]; ���ɖ߂�
+	lea     rcx, [rbp+190h-50h];  元に戻す
+	lea     rdx, [rbp+190h-118h];  元に戻す
 	push	mapAdjustmentProc5ReturnAddress;
 	ret;
 mapAdjustmentProc5 ENDP

@@ -8,7 +8,7 @@ NOT_DEF			=	2026h
 
 ;temporary space for code point
 .DATA
-	eventDialogProc1Flag	DQ	0
+	eventDialogProc1Flag	DB	0
 
 .CODE
 eventDialogProc1V132 PROC
@@ -70,7 +70,7 @@ eventDialogProc2 PROC
 	mulss		xmm0, xmm1;
 	ucomiss		xmm0, xmm8;
 
-	cmp			eventDialogProc1Flag,1h;
+	cmp			eventDialogProc1Flag,1h;??Why using both jz and jnz here?
 	jz			JMP_B;
 	jp			JMP_B;
 	jnz			JMP_B;

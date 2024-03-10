@@ -14,14 +14,14 @@ NOT_DEF			=	2026h
 .CODE
 mapViewProc1 PROC
 	cmp     byte ptr[rax + r8], 0C2h;
-	jbe		JMP_C;
+	jbe		JMP_NOTUTF8;
 	cmp		byte ptr [rax + r8 + 1], 80h
-	jb		JMP_C;
+	jb		JMP_NOTUTF8;
 	cmp		byte ptr [rax + r8 + 1], 0BFh
-	ja		JMP_C;
+	ja		JMP_NOTUTF8;
 	jmp		JMP_A
 
-JMP_C:
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + r8];
 	jmp 	JMP_G;
 
@@ -49,27 +49,19 @@ JMP_B:
 	movzx	eax, dx; 	
 	pop 	rdx;
 	test	ah, ah;
-	jz		JMP_G
+	jz		JMP_G ; this will fix upstream:issue-237
 	cmp		eax, NO_FONT;
 	ja		JMP_G;
 	mov		eax, NOT_DEF;
-	jmp		JMP_G;
 
 JMP_G:
-	mov     r11, qword ptr [ rdi + rax * 8];
-
 	;issue-161
-	cmp		r11,0;
+	cmp		qword ptr [ rdi + rax * 8], 0;
 	jnz		JMP_N;
-
-	; issue-237
-	cmp		rax, 0FFh;
-	jl		JMP_N;
-	
-	mov		eax, 2dh ; -
-	mov     r11, qword ptr [ rdi + rax * 8];
+	mov		eax, 2Dh ; -
 
 JMP_N:
+	mov     r11, qword ptr [ rdi + rax * 8];
 	mov     qword ptr [rbp + 38h], r11;
 	movss   dword ptr [rbp + 40h], xmm2
 
@@ -83,14 +75,14 @@ mapViewProc2V130 PROC
 	lea     r9, [r12 + 120h];
 
 	cmp     byte ptr[rax + r15], 0C2h;
-	jbe		JMP_C;
+	jbe		JMP_NOTUTF8;
 	cmp		byte ptr [rax + r15 + 1], 80h
-	jb		JMP_C;
+	jb		JMP_NOTUTF8;
 	cmp		byte ptr [rax + r15 + 1], 0BFh
-	ja		JMP_C;
+	ja		JMP_NOTUTF8;
 	jmp		JMP_A
 
-JMP_C:
+JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + r15];
 	jmp 	JMP_E;
 
@@ -136,14 +128,14 @@ mapViewProc3 PROC
     mov		qword ptr[rsp + 488h - 448h],0;
 
 	cmp		byte ptr [rax + r15], 0C2h;
-	jbe		JMP_C;
+	jbe		JMP_NOTUTF8;
 	cmp		byte ptr [rax + r15 + 1], 80h
-	jb		JMP_C;
+	jb		JMP_NOTUTF8;
 	cmp		byte ptr [rax + r15 + 1], 0BFh
-	ja		JMP_C;
+	ja		JMP_NOTUTF8;
 	jmp		JMP_A
 
-JMP_C:
+JMP_NOTUTF8:
 
 	movzx	r8d, byte ptr[rax + r15];
 	mov     edx, 1;

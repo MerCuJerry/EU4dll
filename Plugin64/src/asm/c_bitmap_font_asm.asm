@@ -4,7 +4,6 @@ EXTERN	cBitmapFontProc2ReturnAddress	:	QWORD
 NO_FONT			=	98Fh
 NOT_DEF			=	2026h
 
-
 .CODE
 cBitmapFontProc1 PROC
 	;movzx   eax, byte ptr [rdi+rax]
@@ -74,7 +73,7 @@ cBitmapFontProc2 PROC
 
 JMP_NOTUTF8:
 	movzx   eax, byte ptr[rax + r13];
-	jmp 	JMP_H;
+	jmp 	JMP_RET;
 
 JMP_A:
 	push	rdx;
@@ -98,13 +97,13 @@ JMP_B:
 	movzx	eax, dx; 	
 	pop 	rdx;
 	test	ah, ah;
-	jz		JMP_H
+	jz		JMP_RET
 	cmp		ax, NO_FONT;
 
-	ja		JMP_H;
+	ja		JMP_RET;
 	mov		ax, NOT_DEF;
 
-JMP_H:
+JMP_RET:
 	mov     r12, [r12+rax*8];
 	test    r12, r12
 

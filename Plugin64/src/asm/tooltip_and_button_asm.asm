@@ -21,7 +21,7 @@ NOT_DEF			=	2026h
 .DATA
 	tooltipAndButtonProc2TmpCharacter			DD	0
 	tooltipAndButtonProc2TmpCharacterAddress	DQ	0
-	tooltipAndButtonProc2TmpFlag				DD	0
+	tooltipAndButtonProc2TmpFlag				DB	0
 
 .CODE
 tooltipAndButtonProc1V133 PROC
@@ -37,12 +37,12 @@ JMP_C:
 	movzx	r8d, byte ptr[rax + rcx];
 	mov     edx, 1;
 	lea     rcx, qword ptr [rsp + 22D0h - 2258h];
-	mov		tooltipAndButtonProc2TmpFlag, 0h;
+	mov		tooltipAndButtonProc2TmpFlag, 0;
 	call	tooltipAndButtonProc1CallAddress;
 
 	jmp		JMP_B;
 JMP_A:
-	mov		tooltipAndButtonProc2TmpFlag, 1h;
+	mov		tooltipAndButtonProc2TmpFlag, 1;
 
 	; debug
 	mov		r8, qword ptr [rbp + 21D0h - 2220h];
@@ -89,13 +89,13 @@ JMP_A:
 	jb      JMP_B;
 	and     dx, 0Fh;
 
-	inc		rax;
+	inc		rdi;
 	shl     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + rdi];
 
 JMP_B:
-	inc		rax;
+	inc		rdi;
 	shl     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + rdi]
@@ -103,7 +103,6 @@ JMP_B:
 	movzx	eax, dx;
 	mov		rdx, rdi;
 	pop 	rdi;
-	add		edx,2;
 	;mov		dword ptr [rbp+6E0h- 6C0h], ebx;
 	test	ah, ah;
 	jz		JMP_G
@@ -181,15 +180,10 @@ tooltipAndButtonProc3 ENDP
 tooltipAndButtonProc4V133 PROC
 	cmp		word ptr [rcx + 6], 0
 	jz		JMP_A;
-
 	cmp		tooltipAndButtonProc2TmpCharacter, 00FFh;
-	ja		JMP_X;
-
+	ja		JMP_A;
 	push	tooltipAndButtonProc4ReturnAddress1;
 	ret;
-
-JMP_X:
-	nop;
 
 JMP_A:
 	cmp     dword ptr [rbp + 21D0h - 2210h], 0;
@@ -214,18 +208,22 @@ JMP_C:
 	jmp 	JMP_G;
 
 JMP_A:
+	inc		edi;
+	inc		rbx;
 	movzx   dx, byte ptr [rbx + r14];
 	and     dx, 1Fh;
 	cmp     byte ptr [rbx + r14], 0E0h;
 	jb      JMP_B;
 	and     dx, 0Fh;
 
+	inc		edi;
 	inc		rbx;
 	shl     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rbx + r14];
 
 JMP_B:
+	inc		edi;
 	inc		rbx;
 	shl     dx, 6;
 	xor     dl, 80h;
@@ -240,8 +238,6 @@ JMP_F:
 	mov		edx, NOT_DEF;
 
 JMP_H:
-	inc		rbx;
-	add		edi, 3;
 	cmp		rbx, r13;
 	ja		JMP_J;
 	dec		rbx;
