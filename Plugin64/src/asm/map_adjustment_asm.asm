@@ -4,8 +4,6 @@ EXTERN	mapAdjustmentProc2ReturnAddress		:	QWORD
 EXTERN	mapAdjustmentProc3ReturnAddress1	:	QWORD
 EXTERN	mapAdjustmentProc3ReturnAddress2	:	QWORD
 EXTERN	mapAdjustmentProc4ReturnAddress		:	QWORD
-EXTERN	mapAdjustmentProc5ReturnAddress		:	QWORD
-EXTERN	mapAdjustmentProc5SeparatorAddress	:	QWORD
 
 
 NO_FONT			=	98Fh
@@ -53,11 +51,19 @@ mapAdjustmentProc1 ENDP
 ;-------------------------------------------;
 
 mapAdjustmentProc2V130 PROC
+	push	rdi
+	lea		rdi,[rbp + 0A0h]
+	cmp		qword ptr[rbp + 0B8h], 10h
+	cmovnb	rdi,[rbp + 0A0h]
 	cmp		al, 0C2h;
 	jbe		JMP_D;
+	cmp		byte ptr[rbx + rdi + 1], 80h
+	jb		JMP_D;
+	cmp		byte ptr[rbx + rdi + 1], 0BFh
+	ja		JMP_D;
 	mov		r8, 2;
 	cmp		al, 0E0h;
-	jb		JMP_E;
+	jb		JMP_F;
 	inc		r8
 	jmp		JMP_E;
 
@@ -80,8 +86,18 @@ JMP_E:
 
 	mov		word ptr[rbp + 200h - 200h + 1], dx;
 	add		rbx, 2;
+	jmp		JMP_C;
+
+JMP_F:
+	lea     rax, qword ptr [rbp + 200h - 160h];
+	cmp     qword ptr [rbp + 200h - 148h], 10h;
+	cmovnb  rax, qword ptr [rbp + 200h - 160h];
+	mov		dl, byte ptr [rbx + rax + 1];
+	mov		byte ptr[rbp + 200h - 200h + 1], dl;
+	inc		rbx;
 
 JMP_C:
+	pop 	rdi;
 	push	mapAdjustmentProc2ReturnAddress;
 	ret;
 mapAdjustmentProc2V130 ENDP
@@ -158,38 +174,4 @@ JMP_E:
 	push	mapAdjustmentProc4ReturnAddress;
 	ret;
 mapAdjustmentProc4V130 ENDP
-
-;-------------------------------------------;
-
-mapAdjustmentProc5 PROC
-	; ex) {アラゴン}領シチリア ; {} = [rbp+190h-118h
-	lea     rdx, [rbp+190h-118h];
-	movsxd	rcx,dword ptr [rdx+10h];
-	cmp		rcx , 10h;
-	jle		JMP_A;
-	mov		rdx, qword ptr [rdx];
-
-JMP_A:
-	; {}の最後の文字がマルチバイトであるかを確認する
-	; 後ろから3バイト目を取得する。2バイト以下ならばスキップ
-	cmp		rcx,3;
-	jb		JMP_B;
-
-	mov		dl, byte ptr[rdx + rcx - 3];
-
-	cmp		dl, 80h;
-	jb		JMP_B;
-
-	mov		r8,	mapAdjustmentProc5SeparatorAddress;
-	jmp		JMP_C;
-
-JMP_B: ;英語
-	lea		r8,	DefaultSeparator;
-
-JMP_C:
-	lea     rcx, [rbp+190h-50h];  元に戻す
-	lea     rdx, [rbp+190h-118h];  元に戻す
-	push	mapAdjustmentProc5ReturnAddress;
-	ret;
-mapAdjustmentProc5 ENDP
 END

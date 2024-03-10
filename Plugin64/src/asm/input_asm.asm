@@ -146,12 +146,16 @@ KeyPadLeftProc PROC
 	jz		JMP_B; prevent ax below 0
 	cmp		deleteProcFlag, 1;tmp fix working well smt
 	jz		JMP_C;
-	cmp		byte ptr[rax + rcx + 30h - 1], 80h;
+	cmp		byte ptr[rax + rcx + 30h], 80h
 	jb		JMP_B;
-	dec		ax;
-	jz		JMP_B;
-	cmp		byte ptr[rax + rcx + 30h - 1], 0E0h;
+	cmp		byte ptr[rax + rcx + 30h], 0BFh
+	ja		JMP_B;
+	dec 	ax;
+	jz		JMP_B
+	cmp		byte ptr[rax + rcx + 30h], 80h;
 	jb		JMP_B;
+	cmp		byte ptr[rax + rcx + 30h], 0BFh
+	ja		JMP_B;
 	dec		ax;
 
 JMP_B:
@@ -173,8 +177,12 @@ KeyPadLeftProc ENDP
 KeyPadRightProc PROC
 	mov		rcx, rdi;
 	lea		rdx,[rax + 1];
-	cmp		byte ptr[rdi + 30h], 0C0h
+	cmp		byte ptr[rdi + 30h], 0C2h
+	jbe		JMP_A;
+	cmp		byte ptr[rdi + 30h + 1], 80h
 	jb		JMP_A;
+	cmp		byte ptr[rdi + 30h + 1], 0BFh
+	ja		JMP_A;
 	inc		rdx;
 	cmp		byte ptr[rdi + 30h], 0E0h
 	jb		JMP_A;

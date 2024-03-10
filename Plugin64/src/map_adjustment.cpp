@@ -7,15 +7,12 @@ namespace MapAdjustment {
 		void mapAdjustmentProc2V130();
 		void mapAdjustmentProc3V130();
 		void mapAdjustmentProc4V130();
-		void mapAdjustmentProc5();
 		uintptr_t mapAdjustmentProc1ReturnAddress;
 		uintptr_t mapAdjustmentProc1CallAddress;
 		uintptr_t mapAdjustmentProc2ReturnAddress;
 		uintptr_t mapAdjustmentProc3ReturnAddress1;
 		uintptr_t mapAdjustmentProc3ReturnAddress2;
 		uintptr_t mapAdjustmentProc4ReturnAddress;
-		uintptr_t mapAdjustmentProc5ReturnAddress;
-		uintptr_t mapAdjustmentProc5SeparatorAddress;
 	}
 
 	// これはwin32のときはmiscにあったが統合した。
@@ -137,23 +134,6 @@ namespace MapAdjustment {
 		return e;
 	}
 
-	char* mapAdjustmentProc5InjectorSeparateBuffer;
-
-	DllError mapAdjustmentProc5Injector(RunOptions options) {
-		DllError e = {};
-
-		switch (options.version) {
-		case v1_36_0_0:
-			// localization/tmm_l_english.ymlのENCLAVE_NAME_FORMATで対応された
-			break;
-
-		default:
-			e.mapAdjustment.versionMapAdjustmentProc5Injector = true;
-		}
-
-		return e;
-	}
-
 	DllError Init(RunOptions options) {
 		DllError result = {};
 
@@ -161,7 +141,6 @@ namespace MapAdjustment {
 		result |= mapAdjustmentProc2Injector(options);
 		result |= mapAdjustmentProc3Injector(options);
 		result |= mapAdjustmentProc4Injector(options);
-		result |= mapAdjustmentProc5Injector(options);
 
 		return result;
 	}
