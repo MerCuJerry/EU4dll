@@ -1,6 +1,6 @@
-; r13�͕����񃋁[�v�̃J�E���^�B�t�H���g�ɕ����������Ă��Ȃ��Ă��֌W�Ȃ�
-; r10�͕������lenght
-; edx�i[rbp+1D0h+var_138]�j�͕����|�W�V�����J�E���^
+; r13は文字列ループのカウンタ。フォントに文字があってもなくても関係ない
+; r10は文字列のlenght
+; edx（[rbp+1D0h+var_138]）は文字ポジションカウンタ
 
 EXTERN	mapJustifyProc1ReturnAddress1	:	QWORD
 EXTERN	mapJustifyProc1ReturnAddress2	:	QWORD
@@ -9,7 +9,7 @@ EXTERN	mapJustifyProc4ReturnAddress	:	QWORD
 
 ;temporary space for code point
 .DATA
-	mapJustifyProc1TmpFlag	DD	0
+	mapJustifyProc1TmpFlag	DB	0
 	debug	DQ	0
 
 NO_FONT			=	98Fh
@@ -22,6 +22,7 @@ mapJustifyProc1 PROC
 
 	mov		debug, rax;
 
+	push	rdx;
 	cmp     byte ptr[rax + r13], 0C2h;
 	jbe		JMP_NOTUTF8;
 	cmp		byte ptr [rax + r13 + 1], 80h
@@ -31,11 +32,12 @@ mapJustifyProc1 PROC
 	jmp		JMP_A
 
 JMP_NOTUTF8:
-	movzx   esi, byte ptr[rax + r13];
-	jmp 	JMP_K;
+	movzx   edx, byte ptr[rax + r13];
+	mov		esi, edx;
+	mov		mapJustifyProc1TmpFlag, 0;
+	jmp		JMP_RET1
 
 JMP_A:
-	push	rdx;
 	movzx   dx, byte ptr [rax + r13];
 	and     dx, 1Fh;
 	cmp     byte ptr [rax + r13], 0E0h;
@@ -52,42 +54,32 @@ JMP_B:
 	shl     dx, 6;
 	xor     dl, 80h;
 	xor     dl, byte ptr [rax + r13]
-
-	movzx	esi, dx;	
-	pop 	rdx;
 	mov		rax, debug;
-	; ������dec�������̂܂�𐧌䂵�Ă���
+	; ここのdecが文字のつまりを制御している
 	dec		r10;
 	cmp		r13,MAP_LIMIT;
-	ja		JMP_H;
-
-	movzx	esi, si;
-	test	si, 0FF00h;
+	ja		JMP_NOTDEF
+	test	dh, dh;
 	jz		JMP_G
-	cmp		esi, NO_FONT;
+	cmp		edx, NO_FONT;
 	ja		JMP_G;
-JMP_H:
+
+JMP_NOTDEF:
 	mov		esi, NOT_DEF;
 
 JMP_G:
-	mov		mapJustifyProc1TmpFlag, 1h;
-	mov     rdi, qword ptr [rcx + rsi * 8];
-	mov		sil, 10h; // ���̕���sil���r����'��.�Ɣ�r���Ă���̂ł���̂œK���ɖ��߂�
+	mov		mapJustifyProc1TmpFlag, 1;
+	mov		esi, 10h; 下の方でsilを比較して'や.と比較しているのでいるので適当に埋める
 
+JMP_RET1:
+	mov     rdi, qword ptr [rcx + rdx * 8];
+	pop		rdx;
 	test	rdi, rdi;
-	jz		JMP_I;
+	jz		JMP_RET2;
 	push	mapJustifyProc1ReturnAddress1;
 	ret;
 
-JMP_K:
-	mov		mapJustifyProc1TmpFlag, 0h;
-	mov     rdi, qword ptr [rcx + rsi * 8];
-	test	rdi, rdi;
-	jz		JMP_I;
-	push	mapJustifyProc1ReturnAddress1;
-	ret;
-
-JMP_I:
+JMP_RET2:
 	push	mapJustifyProc1ReturnAddress2;
 	ret;
 mapJustifyProc1 ENDP
@@ -98,25 +90,23 @@ mapJustifyProc2 PROC
 	cmp		mapJustifyProc1TmpFlag, 1h;
 	jnz		JMP_A;
 
-	; 3byte = 1�������ǂ���
+	; 3byte = 1文字かどうか
 	cmp		r10, 2; 
 	ja		JMP_A;
-	inc		r10;
-	inc		r10;
-	mov		edx,1;
+	add		r10, 2;
+	mov		edx, 1;
 
 JMP_A:
 	movd    xmm6, edx;
 
-	; �G�X�P�[�v����
 	cmp		mapJustifyProc1TmpFlag, 1h;
 	jz		JMP_B;
 
-	lea     eax, [r10 - 1]; ; -1���Ă���
+	lea     eax, [r10 - 1]; ; -1している
 	jmp		JMP_C;
 
 JMP_B:
-	lea     eax, [r10 - 2]; ; -2���Ă���
+	lea     eax, [r10 - 2]; ; -2している
 
 JMP_C:
 	movd    xmm0, eax;
@@ -134,11 +124,8 @@ mapJustifyProc4 PROC
 	cmp		mapJustifyProc1TmpFlag, 1h;
 	jnz		JMP_A;
 	
-	add     edx,3;
-	add     r13,3;
-
-	jmp		JMP_C;
-
+	add     edx,2;
+	add     r13,2;
 JMP_A:
 	inc     edx;
 	inc     r13;

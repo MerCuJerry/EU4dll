@@ -68,13 +68,6 @@ mainTextProc1 ENDP
 
 ;-------------------------------------------;
 
-mainTextProc2 PROC
-	push	mainTextProc2ReturnAddress;
-	ret;
-mainTextProc2 ENDP
-
-;-------------------------------------------;
-
 mainTextProc2_v131 PROC
 	movsxd  rdx, edi;
 	movsxd  rcx, r14d;
@@ -142,7 +135,7 @@ JMP_A:
 	ret;
 	
 JMP_B:
-	lea     eax, dword ptr [rbx+rbx];
+	lea     eax, dword ptr [rbx*2];
 	movd    xmm1, eax;
 
 	push	mainTextProc3ReturnAddress1;

@@ -9,7 +9,6 @@ NOT_DEF			=	2026h
 ; temporary space for code point
 .DATA
 	mapPopupProc1TmpCharacterAddress	DQ	0
-	mapPopupProc1MultibyteFlag			DD	0
 
 .CODE
 mapPopupProc1 PROC

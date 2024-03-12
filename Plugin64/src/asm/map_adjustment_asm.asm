@@ -4,8 +4,6 @@ EXTERN	mapAdjustmentProc2ReturnAddress		:	QWORD
 EXTERN	mapAdjustmentProc3ReturnAddress1	:	QWORD
 EXTERN	mapAdjustmentProc3ReturnAddress2	:	QWORD
 EXTERN	mapAdjustmentProc4ReturnAddress		:	QWORD
-EXTERN	mapAdjustmentProc5ReturnAddress		:	QWORD
-EXTERN	mapAdjustmentProc5SeparatorAddress	:	QWORD
 
 
 NO_FONT			=	98Fh
@@ -18,30 +16,25 @@ DefaultSeparator	DB	" ", 0
 .CODE
 mapAdjustmentProc1 PROC
 	movsx	ecx, byte ptr[rdi + rbx];
+	inc     r14d;
 	cmp		ecx, 0C2h;
 	jbe		JMP_D;
 	cmp		byte ptr[rdi + rbx + 1], 80h
 	jb		JMP_D
 	cmp		byte ptr[rdi + rbx + 1], 0BFh
 	ja		JMP_D
+	inc		r14d;
 	cmp		ecx, 0E0h;
-	jb		JMP_A;
+	jb		JMP_B;
 
 	inc		r14d;
-	jmp		JMP_A;
+	jmp		JMP_B;
 
 JMP_D:
 	call	mapAdjustmentProc1CallAddress;
 	mov     byte ptr [rdi + rbx], al;
-	inc     r14d;
-
-	jmp		JMP_B;
-
-JMP_A:
-	add		r14d, 2;
 JMP_B:
 	mov     ebx, r14d;
-
 	cmp		r14d, 45;
 	jbe		JMP_C;
 	nop;
@@ -53,11 +46,19 @@ mapAdjustmentProc1 ENDP
 ;-------------------------------------------;
 
 mapAdjustmentProc2V130 PROC
+	push	rdi
+	lea		rdi,[rbp + 0A0h]
+	cmp		qword ptr[rbp + 0B8h], 10h
+	cmovnb	rdi,[rbp + 0A0h]
 	cmp		al, 0C2h;
 	jbe		JMP_D;
+	cmp		byte ptr[rbx + rdi + 1], 80h
+	jb		JMP_D;
+	cmp		byte ptr[rbx + rdi + 1], 0BFh
+	ja		JMP_D;
 	mov		r8, 2;
 	cmp		al, 0E0h;
-	jb		JMP_E;
+	jb		JMP_F;
 	inc		r8
 	jmp		JMP_E;
 
@@ -80,8 +81,18 @@ JMP_E:
 
 	mov		word ptr[rbp + 200h - 200h + 1], dx;
 	add		rbx, 2;
+	jmp		JMP_C;
+
+JMP_F:
+	lea     rax, qword ptr [rbp + 200h - 160h];
+	cmp     qword ptr [rbp + 200h - 148h], 10h;
+	cmovnb  rax, qword ptr [rbp + 200h - 160h];
+	mov		dl, byte ptr [rbx + rax + 1];
+	mov		byte ptr[rbp + 200h - 200h + 1], dl;
+	inc		rbx;
 
 JMP_C:
+	pop 	rdi;
 	push	mapAdjustmentProc2ReturnAddress;
 	ret;
 mapAdjustmentProc2V130 ENDP
@@ -153,45 +164,9 @@ JMP_B:
 	ja		JMP_E;
 JMP_G:
 	mov		eax, NOT_DEF;
-	movzx	eax, ax;
 
 JMP_E:
-
 	push	mapAdjustmentProc4ReturnAddress;
 	ret;
 mapAdjustmentProc4V130 ENDP
-
-;-------------------------------------------;
-
-mapAdjustmentProc5 PROC
-	; ex) {�A���S��}�̃V�`���A ; {} = [rbp+190h-118h
-	lea     rdx, [rbp+190h-118h];
-	movsxd	rcx,dword ptr [rdx+10h];
-	cmp		rcx , 10h;
-	jle		JMP_A;
-	mov		rdx, qword ptr [rdx];
-
-JMP_A:
-	; {}�̍Ō�̕������}���`�o�C�g�ł��邩���m�F����
-	; ��납��3�o�C�g�ڂ��擾����B2�o�C�g�ȉ��Ȃ�΃X�L�b�v
-	cmp		rcx,3;
-	jb		JMP_B;
-
-	mov		dl, byte ptr[rdx + rcx - 3];
-
-	cmp		dl, 80h;
-	jb		JMP_B;
-
-	mov		r8,	mapAdjustmentProc5SeparatorAddress;
-	jmp		JMP_C;
-
-JMP_B: ;�p��
-	lea		r8,	DefaultSeparator;
-
-JMP_C:
-	lea     rcx, [rbp+190h-50h]; ���ɖ߂�
-	lea     rdx, [rbp+190h-118h]; ���ɖ߂�
-	push	mapAdjustmentProc5ReturnAddress;
-	ret;
-mapAdjustmentProc5 ENDP
 END

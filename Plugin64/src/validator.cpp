@@ -33,7 +33,7 @@ namespace Validator {
 					L"当我发布新的时，它会自动更新。\n"
 					L"\n"
 					L"DLL宣布页面:\n"
-					L"https://github.com/matanki-saito/EU4dll"
+					L"https://github.com/matanki-saito/EU4dll\n"
 					L"该版本由MerCuJerry支持:https://github.com/MerCuJerry/EU4dll";
 				break;
 
