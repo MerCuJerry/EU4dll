@@ -18,7 +18,6 @@ This dll makes it possible to display double-byte characters on Europa Universal
   3. Subscribe multibyte mods from steam or add mods to paradox user directory in your documents folder.
   4. Enable mods on game luncher
   5. Play game. 👍
-  6. 
 ## Find bugs
 
 If you find a bug, **create a issue** in this repository.

@@ -68,7 +68,7 @@ JMP_NOTDEF:
 	mov		esi, NOT_DEF;
 
 JMP_G:
-	mov		mapJustifyProc1TmpFlag, 1h;
+	mov		mapJustifyProc1TmpFlag, 1;
 	mov		esi, 10h; 下の方でsilを比較して'や.と比較しているのでいるので適当に埋める
 
 JMP_RET1:
@@ -94,7 +94,7 @@ mapJustifyProc2 PROC
 	cmp		r10, 2; 
 	ja		JMP_A;
 	add		r10, 2;
-	mov		edx,1;
+	mov		edx, 1;
 
 JMP_A:
 	movd    xmm6, edx;
@@ -102,11 +102,11 @@ JMP_A:
 	cmp		mapJustifyProc1TmpFlag, 1h;
 	jz		JMP_B;
 
-	lea     eax, [r10 - 1]; ; -1���Ă���
+	lea     eax, [r10 - 1]; ; -1している
 	jmp		JMP_C;
 
 JMP_B:
-	lea     eax, [r10 - 2]; ; -2���Ă���
+	lea     eax, [r10 - 2]; ; -2している
 
 JMP_C:
 	movd    xmm0, eax;

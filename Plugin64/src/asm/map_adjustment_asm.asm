@@ -16,30 +16,25 @@ DefaultSeparator	DB	" ", 0
 .CODE
 mapAdjustmentProc1 PROC
 	movsx	ecx, byte ptr[rdi + rbx];
+	inc     r14d;
 	cmp		ecx, 0C2h;
 	jbe		JMP_D;
 	cmp		byte ptr[rdi + rbx + 1], 80h
 	jb		JMP_D
 	cmp		byte ptr[rdi + rbx + 1], 0BFh
 	ja		JMP_D
+	inc		r14d;
 	cmp		ecx, 0E0h;
-	jb		JMP_A;
+	jb		JMP_B;
 
 	inc		r14d;
-	jmp		JMP_A;
+	jmp		JMP_B;
 
 JMP_D:
 	call	mapAdjustmentProc1CallAddress;
 	mov     byte ptr [rdi + rbx], al;
-	inc     r14d;
-
-	jmp		JMP_B;
-
-JMP_A:
-	add		r14d, 2;
 JMP_B:
 	mov     ebx, r14d;
-
 	cmp		r14d, 45;
 	jbe		JMP_C;
 	nop;

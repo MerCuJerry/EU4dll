@@ -101,6 +101,8 @@ JMP_A:
 	inc		rsi;
 	cmp		rax, 3;
 	jb		JMP_C;
+	cmp		byte ptr [rcx + rax - 1], 80h;
+	jb		JMP_C;
 	cmp		byte ptr [rcx + rax - 2], 80h;
 	jb		JMP_C;
 	inc		rsi;
